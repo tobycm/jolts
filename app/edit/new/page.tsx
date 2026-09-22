@@ -4,7 +4,7 @@ import { NewEntryFlow } from "@/components/editor/new-entry"
 import { CONTENT_TYPES, listEntries, plainExcerpt } from "@/lib/content"
 
 export const metadata: Metadata = {
-  title: "Write something new - jolts",
+  title: "Write something new",
   robots: { index: false },
 }
 

@@ -28,6 +28,7 @@ import { Editor, EditorContent } from "@tiptap/react"
 
 import { CheckerFrame } from "@/components/checker-frame"
 import { BlockHandle } from "@/components/editor/block-handle"
+import { TableGrips } from "@/components/editor/table-grips"
 import { EditorBubbleMenu } from "@/components/editor/bubble"
 import {
   EditorCtxProvider,
@@ -1283,6 +1284,10 @@ export function EditorShell(props: EditorSource) {
                     key={activePage.id}
                     editor={activeEntry.editor}
                   />
+                  <TableGrips
+                    key={`table-${activePage.id}`}
+                    editor={activeEntry.editor}
+                  />
                   <BlockHandle
                     key={`handle-${activePage.id}`}
                     editor={activeEntry.editor}
@@ -1432,6 +1437,7 @@ function defaultMeta(contentType: ContentType, title = ""): EntryMeta {
     return {
       ...base,
       type: "guide",
+      build: true,
       difficulty: "beginner",
       time: "",
       cost: "",

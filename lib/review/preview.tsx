@@ -94,6 +94,7 @@ function fallbackMeta(contentType: ContentType, data: Record<string, unknown>) {
     return {
       ...base,
       type: "guide",
+      build: true,
       difficulty: "beginner",
       time: "",
       cost: "",
@@ -103,6 +104,7 @@ function fallbackMeta(contentType: ContentType, data: Record<string, unknown>) {
       tools: [],
     }
   }
+  if (contentType === "pages") return { ...base, type: "page" }
   return { ...base, type: contentType === "tools" ? "tool" : "concept" }
 }
 

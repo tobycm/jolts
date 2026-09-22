@@ -4,7 +4,7 @@ import { CuratorGate } from "@/components/review/gate"
 import { PrView } from "@/components/review/pr-view"
 
 export const metadata: Metadata = {
-  title: "Review - jolts",
+  title: "Review",
   robots: { index: false, follow: false },
 }
 

@@ -37,7 +37,7 @@ export async function generateMetadata(
     ? getEntry(type as ContentType, slug)
     : null
   return {
-    title: entry ? `Editing ${entry.meta.title} - jolts` : "Editor - jolts",
+    title: entry ? `Editing ${entry.meta.title}` : "Editor",
     robots: { index: false },
   }
 }

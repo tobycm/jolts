@@ -1,0 +1,116 @@
+---
+type: concept
+title: Hinges
+subtitle: Learn how to make a Butt Hinge on any of your projects!
+author: Taran-the-Idiot
+---
+
+There are a quite a few different types of hinges but I will go over the main types that you would use when you are using 3d printed hinges
+
+PSA: This guide uses shapr3d however the steps taken are transferable to most CAD software
+
+## The Butt Hinge
+
+![image](https://cdn.hackclub.com/019d8099-b0f7-73f6-b159-833b8d677f53/paste-1775979047911.png)
+
+This is the most common type of hinge you would find in the wild. They are most likely what the doors in your house use to swing open. This type of hinge is very versatile and cool beans
+
+When you print these, instead of using a metal pin like how normal hinges do, you can design them around using a piece of filament as the pin instead. The filament stays in place due to its natural curviture so it is cheap and effective.
+
+### How to make it
+
+![image](https://cdn.hackclub.com/019d7d52-ec90-76f7-ae88-fc691a89ea9a/0_4.webp)
+
+For this guide, I will be connecting these 2 blocks together in a way like shown above but you can use these steps for just about any 2 parts.
+
+![image](https://cdn.hackclub.com/019d7f2a-464a-7764-9879-813b382bc890/Screen%20Shot%202026-04-12%20at%2010.49.18%20am.png)
+
+
+### Step 1: Positioning your parts
+
+While it is possible to make hinges while your parts are separated or in an open position, The easiest way to do it is while they are closed.
+
+![image](https://cdn.hackclub.com/019d8055-8f9b-7563-9a02-db0c86ab4587/Screen%20Shot%202026-04-12%20at%204.15.55%20pm.png)
+
+So I will position my blocks into how they will look like when closed.^
+
+### Step 2: Making a sketch
+
+![image](https://cdn.hackclub.com/019d808c-72d0-7c6a-bd48-883579d60b94/Screen%20Shot%202026-04-12%20at%205.15.21%20pm.png)
+
+Make a sketch on one side and make a circle that has a diameter of 2mm at the corner where the 2 blocks meet. Note that despite shapr using the symbol for radius, it is actually showing you the diameter of the circle.
+
+After that make a second circle on top of the first one with a larger radius. I am using 10mm but this one can be changed based on how much space you have, what you want it to look like and how strong you want it.
+
+![image](https://cdn.hackclub.com/019d8090-7b1d-7c9b-8728-14f170100a7a/Screen%20Shot%202026-04-12%20at%205.19.42%20pm.png)
+
+### Step 3: Cut the blocks
+
+![image](https://cdn.hackclub.com/019d8091-f95d-70af-ad67-f7e98fc77f7b/Screen%20Shot%202026-04-12%20at%205.21.33%20pm.png)
+
+Use the arrow to offset the circles you just made and remove the material where the hinges will go. For onshape and similar softwares, you would click extrude>remove and use that panel to achieve the same result.
+
+After that your sketch will likely become hidden, so you can go ahead and make it visible again as we still need it. Click the button that looks like an eye.
+
+![image](https://cdn.hackclub.com/019d8095-2558-76bd-a00b-a2c03ea389a7/Screen%20Shot%202026-04-12%20at%205.25.23%20pm.png)
+
+### Step 4: Making the hinge
+
+![image](https://cdn.hackclub.com/019d8097-c1a8-7bfd-ac93-7f2808b7308c/Screen%20Shot%202026-04-12%20at%205.28.31%20pm.png)
+
+Select the outer circle of the hinge and extrude it inwards by the total length of the hinge divided by the amount of knuckles you want. For this joint I am using 5 knuckles and the length of my hinge is 25mm so each knuckle will be 5mm long. For your project it may be different so be careful to adjust accordingly. You can click on any line to find its length in case you dont know how long your hinge will be
+
+![image](https://cdn.hackclub.com/019d809c-8d6d-7b56-a43b-9c2800a97170/Screen%20Shot%202026-04-12%20at%205.33.46%20pm.png)
+
+Double click the knuckle you just made to select it. Click the button called copy so it turns blue andthen click the arrow that points in the direction of your hinge. If it points in the opposite direction then click it and put a negative number in to move it backwards. We will be moving it 5mm to be next to the previous one.
+
+![image](https://cdn.hackclub.com/019d809e-c2d8-7efe-a12e-c0a20921f99f/Screen%20Shot%202026-04-12%20at%205.36.10%20pm.png)
+
+So now it should look like this. Once you get this down, repeat it until you reach the end of your hinge.
+
+![image](https://cdn.hackclub.com/019d809f-f574-79be-ab2e-ae2bc0bae689/Screen%20Shot%202026-04-12%20at%205.37.29%20pm.png)
+
+Now that it looks like this, select every other knuckle and either the top or bottom block(your choice)
+
+![image](https://cdn.hackclub.com/019d80a8-81f1-7dba-864a-eb8c1cb18ca7/Screen%20Shot%202026-04-12%20at%205.46.46%20pm.png)
+
+Visual aid^
+
+Once you have it selected, you want to find the button called Union(or you can click "u" on your keyboard). If you are not using shar3d, then you can google how to combine 2 bodies in your specific software and it will tell you.
+
+![image](https://cdn.hackclub.com/019d80a9-0fd5-7a41-a3f1-88e605fa8f88/Screen%20Shot%202026-04-12%20at%205.47.24%20pm.png)
+
+After that take the knuckles you missed and union them to the bottom block(or the top if you did the bottom block first)
+
+In the end it should look like this(ignore the colours, just know that its 2 bodies):
+
+![image](https://cdn.hackclub.com/019d80ac-53ad-7bce-bb04-d39adc57b846/Screen%20Shot%202026-04-12%20at%205.50.56%20pm.png)
+
+Now you have a semi functional model. But it isnt done yet.
+
+### Step 5: Polishing it off
+
+Right now the knuckles are pressed against each other with no tollerance to move. So you need to give it the tollerance and wiggle room to actually move. I am reducing it by 0.1mm on all of the sides.
+
+![image](https://cdn.hackclub.com/019d80bb-332d-7fc2-9242-f4c1f13f5981/Screen%20Shot%202026-04-12%20at%206.06.40%20pm.png)
+
+First hide one of the bodies then make sure you have all the sides selected when you do this. You can do each side individually but that just takes longer and is unnecessary. 
+
+After that do the same on the other body. In the end it should look like this:
+
+![image](https://cdn.hackclub.com/019d80be-b98a-7059-8d8d-4751d98e540f/Screen%20Shot%202026-04-12%20at%206.10.54%20pm.png)
+
+Now that you have tollerances there, now you need to add even more tollerances.
+
+![image](https://cdn.hackclub.com/019d80c1-220d-76aa-a379-d817376250ff/Screen%20Shot%202026-04-12%20at%206.13.21%20pm.png)
+
+The knuckles dont just rub between each other, they also rub with the blocks in the highlighted areas. so we need to make a 0.2mm gap there. This is the same step as before, just with 0.2mm intead of 0.1mm.
+
+Once you add tolerances onto the first block, make sure you also add it to the second.
+
+![image](https://cdn.hackclub.com/019d80c3-887a-77d3-abb3-a174b14a58a6/Screen%20Shot%202026-04-12%20at%206.16.14%20pm.png)
+
+And boom its done! When you print it out, cut a piece of filament to length and use it as the pin and it will be a fully functional hinge!
+
+Now go out and make this on your own projects, you can improve on this design by making it integrate and look better on your project, give it physical constraints so it only opens a certain amount, or do what ever else you can think of. 
+

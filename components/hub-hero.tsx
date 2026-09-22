@@ -16,19 +16,19 @@ export function HubHero({
   const theme = typeTheme[type]
   return (
     <div>
-      <h1 className="text-[36px] leading-[1.1] font-semibold tracking-[-0.03em] text-[#16181d]">
+      <h1 className="text-[36px] leading-[1.1] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]">
         {title}
       </h1>
       <div
         aria-hidden
         className="mt-[10px] h-[7px] w-[76px] overflow-hidden rounded-full"
         style={{
-          backgroundImage: `conic-gradient(${theme.checkerA} 0 25%, ${theme.checkerB} 0 50%, ${theme.checkerA} 0 75%, ${theme.checkerB} 0)`,
+          backgroundImage: `conic-gradient(${theme.tickA} 0 25%, ${theme.tickB} 0 50%, ${theme.tickA} 0 75%, ${theme.tickB} 0)`,
           backgroundSize: "14px 14px",
           backgroundPosition: "0 3.5px",
         }}
       />
-      <p className="mt-[12px] max-w-[560px] text-[15px] leading-[1.6] tracking-[-0.01em] text-[#5c6470]">
+      <p className="mt-[12px] max-w-[560px] text-[15px] leading-[1.6] tracking-[-0.01em] text-[var(--jt-muted)]">
         {blurb}
       </p>
     </div>

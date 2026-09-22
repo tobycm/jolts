@@ -24,8 +24,11 @@ export function splitFrontmatter(raw: string): SplitFile {
 
 const KEY_ORDER = [
   "type",
+  "build",
   "title",
   "subtitle",
+  "seoTitle",
+  "seoDescription",
   "author",
   "contributors",
   "difficulty",

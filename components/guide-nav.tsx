@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from "react"
 
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-import { CheckerFrame, type FrameTheme } from "@/components/checker-frame"
+import { BookLink } from "@/components/book-link"
+import { CheckerFrame } from "@/components/checker-frame"
 import type { TocEntry } from "@/lib/content"
+import type { TypeTheme } from "@/lib/theme"
 
 /* The left panel: guide title on the checker chrome, page list on the
    white surface, and the ACTIVE page's table of contents nested beneath
@@ -33,7 +34,7 @@ export function GuideNav({
   items,
 }: {
   entryTitle: string
-  theme: FrameTheme
+  theme: TypeTheme
   items: NavItem[]
 }) {
   const pathname = usePathname()
@@ -118,7 +119,7 @@ export function GuideNav({
         {entryTitle}
       </p>
 
-      <div className="relative min-h-0 overflow-y-auto rounded-[7px] bg-white px-[13px] py-[9px] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.15)]">
+      <div className="relative min-h-0 overflow-y-auto rounded-[7px] bg-[var(--jt-surface)] px-[13px] py-[9px] shadow-[0px_2px_4px_0px_rgba(0,0,0,0.15)]">
         <ol className="space-y-[1px]">
           {items.map((item, i) => {
             const active = item.slug === current
@@ -129,7 +130,7 @@ export function GuideNav({
                     <span
                       aria-hidden
                       className="w-[13px] shrink-0 text-right text-[11.5px] tabular-nums transition-colors duration-200"
-                      style={{ color: active ? theme.accent : "#c2c7ce" }}
+                      style={{ color: active ? theme.accent : "var(--jt-fainter)" }}
                     >
                       {/* the overview is home, not step one - pages carry
                           the numbers (mirrors the editor's rail) */}
@@ -145,12 +146,12 @@ export function GuideNav({
                       {item.title}
                     </span>
                   ) : (
-                    <Link
+                    <BookLink
                       href={item.href}
-                      className="min-w-0 flex-1 py-[3px] text-[13.5px] tracking-[-0.02em] text-[#5c6470] transition-colors duration-150 hover:text-[#16181d]"
+                      className="min-w-0 flex-1 py-[3px] text-[13.5px] tracking-[-0.02em] text-[var(--jt-muted)] transition-colors duration-150 hover:text-[var(--jt-ink)]"
                     >
                       {item.title}
-                    </Link>
+                    </BookLink>
                   )}
                 </div>
 
@@ -167,7 +168,7 @@ export function GuideNav({
                     <div className="min-h-0 overflow-hidden">
                       <ul
                         className={
-                          "mt-[2px] mb-[4px] space-y-[1px] border-l border-black/[0.08] pl-[10px] " +
+                          "mt-[2px] mb-[4px] space-y-[1px] border-l border-[var(--jt-line)] pl-[10px] " +
                           (multi ? "ml-[19px]" : "ml-[2px]")
                         }
                       >
@@ -181,7 +182,7 @@ export function GuideNav({
                                   "block truncate py-[2.5px] text-[12.5px] tracking-[-0.01em] transition-colors duration-150 " +
                                   (reading
                                     ? "font-medium"
-                                    : "text-[#9aa1ab] hover:text-[#16181d]")
+                                    : "text-[var(--jt-faint)] hover:text-[var(--jt-ink)]")
                                 }
                                 style={
                                   reading ? { color: theme.accent } : undefined

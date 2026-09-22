@@ -7,7 +7,7 @@ import {
 export const dynamicParams = false
 
 export function generateStaticParams() {
-  return guidePageStaticParams()
+  return guidePageStaticParams("guides")
 }
 
 export async function generateMetadata(

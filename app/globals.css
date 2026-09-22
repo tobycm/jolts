@@ -49,24 +49,263 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ---------- the palette ---------- */
+
+/* One layer of tokens for both themes. Every surface, line, and neutral in
+   the reading site points here, which is what makes a dark theme possible
+   at all: the components below carry no literal colors.
+
+   Dark is a deliberate choice, never inferred - there is no
+   prefers-color-scheme rule anywhere. `.dark` is put on <html> by the
+   inline script in app/layout.tsx and by ThemeSync, from a stored
+   preference the command palette writes. */
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
+  color-scheme: light;
+
+  /* text, darkest to lightest */
+  --jt-ink: #16181d;
+  --jt-body: #33383f;
+  --jt-muted: #5c6470;
+  --jt-faint: #9aa1ab;
+  --jt-fainter: #c2c7ce;
+
+  /* grounds. `page` is the paper, `surface` the white inside a checker
+     frame - the same color in light, six points apart in dark, because a
+     frame's inside has to read as raised off the page. */
+  --jt-page: #ffffff;
+  --jt-surface: #ffffff;
+  --jt-raise: #fafafa;
+  --jt-fill: #f3f3f3;
+  --jt-fill-hover: #ececec;
+  /* hover for a `raise` surface. It has to move AWAY from the ground, which
+     is up in light and down in dark - a shared token would invert. */
+  --jt-raise-hover: #ffffff;
+
+  /* code: a dark well in light mode, a darker one in dark mode */
+  --jt-well: #15181d;
+  --jt-well-ink: #e8eaed;
+  --jt-code-inline: rgba(0, 0, 0, 0.055);
+
+  /* hairlines */
+  --jt-line: rgba(0, 0, 0, 0.1);
+  --jt-line-soft: rgba(0, 0, 0, 0.07);
+  --jt-line-strong: rgba(0, 0, 0, 0.25);
+  --jt-line-hover: rgba(0, 0, 0, 0.28);
+  --jt-line-dashed: rgba(0, 0, 0, 0.13);
+
+  /* Ink that sits ON a bright accent fill - the Step tab, the "write a
+     new guide" plus, the Zero To One flag. White works on the light
+     theme's saturated accents; in dark the accents are lightened for type
+     legibility, so anything on top of them has to go dark instead. */
+  --jt-on-accent: #ffffff;
+
+  /* do / don't marks in the style guide */
+  --jt-good: #067a54;
+  --jt-bad: #d43c3c;
+
+  /* odds and ends that still have to flip */
+  --jt-skeleton: rgba(0, 0, 0, 0.06);
+  --jt-dot-off: rgba(0, 0, 0, 0.12);
+  --jt-mount: #ffffff; /* polaroid border, avatar ring */
+  --jt-scrim: rgba(0, 0, 0, 0.25);
+
+  /* Header chrome. The blue band is the loudest surface on the site, so
+     dark gets its own set rather than a tint of this one. */
+  --jt-header: #01a6ff;
+  --jt-header-checker-a: #01bbff;
+  --jt-header-checker-b: #01a6ff;
+  --jt-header-wash-from: rgba(1, 242, 255, 0.1);
+  --jt-header-wash-to: rgba(1, 242, 255, 0.6);
+  --jt-header-veil: rgba(0, 0, 0, 0.05);
+  --jt-header-shadow: rgba(1, 187, 255, 0.25);
+  --jt-header-pill: rgba(255, 255, 255, 0.2);
+
+  /* the header glow's two stops (see .jolts-glow below) */
+  --jt-glow-peak: 1;
+  --jt-glow-rest: 0.72;
+
+  /* Per-family identity. `accent` is the bright one - type, icons, dots,
+     small fills. `frame`/`checker-*`/`wash` are the checker chrome, which
+     is the half that has to come down in luminance when the page goes
+     dark, or every framed block turns into a neon rectangle. `wash` is an
+     rgb triplet: the gradients that consume it pick their own alpha. */
+  --jt-guides-accent: #ff902f;
+  --jt-guides-frame: #ff902f;
+  --jt-guides-checker-a: #ffba01;
+  --jt-guides-checker-b: #ff9d00;
+  --jt-guides-wash: 255, 211, 1;
+  --jt-guides-tint: #fff4e6;
+  /* Small decorative checkers (the rule under a hub title) stay bright in
+     both themes: the deepened frame pair only works over a large area. */
+  --jt-guides-tick-a: #ffba01;
+  --jt-guides-tick-b: #ff9d00;
+
+  --jt-concepts-accent: #a633d6;
+  --jt-concepts-frame: #a633d6;
+  --jt-concepts-checker-a: #bb4fe8;
+  --jt-concepts-checker-b: #a633d6;
+  --jt-concepts-wash: 222, 141, 255;
+  --jt-concepts-tint: #f8eefc;
+  --jt-concepts-tick-a: #bb4fe8;
+  --jt-concepts-tick-b: #a633d6;
+  --jt-concepts-chip: #f8eefc;
+  --jt-concepts-chip-ink: #8a21b8;
+  --jt-concepts-chip-hover: #f0dff8;
+
+  --jt-tools-accent: #0ebf80;
+  --jt-tools-frame: #0ebf80;
+  --jt-tools-checker-a: #33d6a6;
+  --jt-tools-checker-b: #14c98f;
+  --jt-tools-wash: 141, 255, 216;
+  --jt-tools-tint: #e9faf3;
+  --jt-tools-tick-a: #33d6a6;
+  --jt-tools-tick-b: #14c98f;
+  --jt-tools-chip: #e9faf3;
+  --jt-tools-chip-ink: #067a54;
+  --jt-tools-chip-hover: #dcf5ea;
+
+  /* Checkpoint's green is a shade off the tools green on purpose - one is
+     a content type, the other a state. */
+  --jt-check-frame: #14b87a;
+  --jt-check-checker-a: #2fcb8f;
+  --jt-check-checker-b: #14b87a;
+  --jt-check-wash: 150, 255, 210;
+
+  /* Blue is the site talking: nav dropdown, search, the save dialog. */
+  --jt-chrome-accent: #01a6ff;
+  --jt-chrome-frame: #01a6ff;
+  --jt-chrome-checker-a: #01bbff;
+  --jt-chrome-checker-b: #01a6ff;
+  --jt-chrome-wash: 1, 206, 242;
+  /* resolved form, for the one wash that lives in a Tailwind class */
+  --jt-chrome-wash-to: rgba(1, 206, 242, 0.7);
+  --jt-chrome-select: #01a6ff;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --jt-ink: #eef1f6;
+  --jt-body: #c6ccd6;
+  --jt-muted: #9ba3af;
+  --jt-faint: #838b97;
+  --jt-fainter: #626a76;
+
+  --jt-page: #0e1014;
+  --jt-surface: #16191f;
+  --jt-raise: #1c2027;
+  --jt-fill: #23272f;
+  --jt-fill-hover: #2b303a;
+  --jt-raise-hover: #23272f;
+
+  --jt-well: #0a0c0f;
+  --jt-well-ink: #dfe3ea;
+  --jt-code-inline: rgba(255, 255, 255, 0.07);
+
+  --jt-line: rgba(255, 255, 255, 0.1);
+  --jt-line-soft: rgba(255, 255, 255, 0.07);
+  --jt-line-strong: rgba(255, 255, 255, 0.3);
+  --jt-line-hover: rgba(255, 255, 255, 0.34);
+  --jt-line-dashed: rgba(255, 255, 255, 0.14);
+
+  --jt-on-accent: #12141a;
+
+  --jt-good: #4fd6a5;
+  --jt-bad: #f58080;
+
+  --jt-skeleton: rgba(255, 255, 255, 0.06);
+  --jt-dot-off: rgba(255, 255, 255, 0.14);
+  --jt-mount: #2b303a;
+  --jt-scrim: rgba(0, 0, 0, 0.55);
+
+  --jt-header: #075d8e;
+  --jt-header-checker-a: #0a6ea5;
+  --jt-header-checker-b: #06527d;
+  --jt-header-wash-from: rgba(1, 242, 255, 0.05);
+  --jt-header-wash-to: rgba(2, 44, 64, 0.55);
+  --jt-header-veil: rgba(0, 0, 0, 0.22);
+  --jt-header-shadow: rgba(0, 0, 0, 0.5);
+  --jt-header-pill: rgba(255, 255, 255, 0.12);
+
+  --jt-glow-peak: 0.9;
+  --jt-glow-rest: 0.55;
+
+  /* Accents go UP a step: the same hex that reads as saturated on white
+     reads as muddy on near-black, and these carry 12-14px type. Frames go
+     DOWN to within reach of the surface - the checker still reads as a
+     pattern, it just stops glowing. The wash now deepens toward the page
+     color instead of toward a light tint, so a frame fades into the page
+     at its bottom edge the way it fades into white in light mode. */
+  --jt-guides-accent: #ffa552;
+  --jt-guides-frame: #6d3f10;
+  --jt-guides-checker-a: #7d4d12;
+  --jt-guides-checker-b: #653a0c;
+  --jt-guides-wash: 14, 16, 20;
+  --jt-guides-tint: rgba(255, 165, 82, 0.14);
+  --jt-guides-tick-a: #ffba01;
+  --jt-guides-tick-b: #ff9d00;
+
+  --jt-concepts-accent: #cf86ee;
+  --jt-concepts-frame: #4a1a63;
+  --jt-concepts-checker-a: #571f73;
+  --jt-concepts-checker-b: #43175a;
+  --jt-concepts-wash: 14, 16, 20;
+  --jt-concepts-tint: rgba(207, 134, 238, 0.14);
+  --jt-concepts-tick-a: #c364e8;
+  --jt-concepts-tick-b: #a93fd8;
+  --jt-concepts-chip: rgba(166, 51, 214, 0.2);
+  --jt-concepts-chip-ink: #ddaaf5;
+  --jt-concepts-chip-hover: rgba(166, 51, 214, 0.34);
+
+  --jt-tools-accent: #3fd9a4;
+  --jt-tools-frame: #0b5540;
+  --jt-tools-checker-a: #0d6349;
+  --jt-tools-checker-b: #0a4d3a;
+  --jt-tools-wash: 14, 16, 20;
+  --jt-tools-tint: rgba(63, 217, 164, 0.13);
+  --jt-tools-tick-a: #33d6a6;
+  --jt-tools-tick-b: #14c98f;
+  --jt-tools-chip: rgba(14, 191, 128, 0.18);
+  --jt-tools-chip-ink: #5fe0b4;
+  --jt-tools-chip-hover: rgba(14, 191, 128, 0.3);
+
+  --jt-check-frame: #0c5a3c;
+  --jt-check-checker-a: #0e6a47;
+  --jt-check-checker-b: #0a5136;
+  --jt-check-wash: 14, 16, 20;
+
+  --jt-chrome-accent: #38b6ff;
+  --jt-chrome-frame: #075d8e;
+  --jt-chrome-checker-a: #0a6ea5;
+  --jt-chrome-checker-b: #06527d;
+  --jt-chrome-wash: 2, 44, 64;
+  --jt-chrome-wash-to: rgba(2, 44, 64, 0.7);
+  /* the palette's selected row: white sits on this, so it has to be dark
+     enough to read as text rather than as a highlight */
+  --jt-chrome-select: #0f6ea8;
+}
+
+:root {
+  /* shadcn's shell, re-pointed at the palette above - the ui/ primitives,
+     the body ground, and every dialog inherit the theme through these. */
+  --background: var(--jt-page);
+  --foreground: var(--jt-ink);
+  --card: var(--jt-surface);
+  --card-foreground: var(--jt-ink);
+  --popover: var(--jt-surface);
+  --popover-foreground: var(--jt-ink);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --secondary: var(--jt-fill);
+  --secondary-foreground: var(--jt-ink);
+  --muted: var(--jt-fill);
+  --muted-foreground: var(--jt-muted);
+  --accent: var(--jt-fill);
+  --accent-foreground: var(--jt-ink);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  --border: var(--jt-line);
+  --input: var(--jt-line);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -85,23 +324,23 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --background: var(--jt-page);
+  --foreground: var(--jt-ink);
+  --card: var(--jt-surface);
+  --card-foreground: var(--jt-ink);
+  --popover: var(--jt-surface);
+  --popover-foreground: var(--jt-ink);
+  --primary: var(--jt-ink);
+  --primary-foreground: var(--jt-page);
+  --secondary: var(--jt-fill);
+  --secondary-foreground: var(--jt-ink);
+  --muted: var(--jt-fill);
+  --muted-foreground: var(--jt-muted);
+  --accent: var(--jt-fill);
+  --accent-foreground: var(--jt-ink);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
+  --border: var(--jt-line);
+  --input: var(--jt-line);
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -127,6 +366,18 @@
   }
   html {
     @apply font-sans;
+    /* Overscroll gutter colour. macOS/iOS paint the rubber-band gutter with
+       the ROOT background-colour only - DOM content above y=0 is never drawn
+       there, and a `fixed` background is skipped too - so this is the one
+       lever that reaches it. Default to the page colour so the bottom bounce
+       matches the page (and the footer); OverscrollColor flips it to the
+       header colour while scrolled to the very top (see [data-at-top]), the
+       only position where the TOP bounce is reachable, so the top bounce
+       continues the header instead of flashing white. */
+    background-color: var(--jt-page);
+  }
+  html[data-at-top] {
+    background-color: var(--jt-header);
   }
 }
 
@@ -186,10 +437,10 @@
     opacity: 0;
   }
   35% {
-    opacity: 1;
+    opacity: var(--jt-glow-peak);
   }
   100% {
-    opacity: 0.72;
+    opacity: var(--jt-glow-rest);
   }
 }
 
@@ -210,13 +461,61 @@
 }
 @keyframes jolts-glow-flash {
   0% {
-    opacity: 1;
+    opacity: var(--jt-glow-peak);
   }
   55% {
-    opacity: 1;
+    opacity: var(--jt-glow-peak);
   }
   100% {
-    opacity: 0.72;
+    opacity: var(--jt-glow-rest);
+  }
+}
+
+/* ---------- reading clock ----------
+   Lifted wholesale from aisafety.dance: a 40px clock face that sweeps as
+   you read, with the minutes-left label tucked under it. The face is one
+   sprite sheet - 12 columns x 10 rows, 120 frames from empty to full -
+   scrubbed by background-position. Same art, light and dark. Sits above
+   the article but under modals; it lives in the persistent book layout so
+   it never gets captured by the page-switch transition below. */
+.reading-clock {
+  position: fixed;
+  right: 10px;
+  bottom: 13px;
+  z-index: 40;
+  text-align: center;
+  color: var(--jt-body);
+  pointer-events: none;
+}
+.reading-clock__icon {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  background-image: url(/reading-clock/clock.png);
+  background-repeat: no-repeat;
+  background-size: 1200% 1000%; /* 12 cols x 10 rows of 40px frames */
+}
+.dark .reading-clock__icon {
+  background-image: url(/reading-clock/clock_dark.png);
+}
+.reading-clock__label {
+  position: relative;
+  top: -4px;
+  width: 100%;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+/* On phones the widget floats over the prose, so give the label a chip to
+   sit on - mirrors aisafety.dance's own mobile treatment. */
+@media (max-width: 768px) {
+  .reading-clock__label {
+    display: inline-block;
+    width: auto;
+    padding: 1px 7px;
+    border-radius: 20px;
+    background: var(--jt-surface);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
   }
 }
 
@@ -245,6 +544,33 @@
     opacity: 0;
     transform: translateY(10px);
   }
+}
+
+/* The header is outside the transition, so it lands in the browser's
+   default `root` crossfade - and scrolled down, the old snapshot has no
+   header at the top of the viewport, so it fades in over the new page
+   instead of just being there. Pin it: no animation, no old snapshot to
+   dissolve from, and above the content that is still fading out (the
+   outgoing column is captured at its old scroll offset, which overlaps
+   the header's strip). */
+::view-transition-group(jolts-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(jolts-header) {
+  display: none;
+}
+::view-transition-new(jolts-header) {
+  animation: none;
+}
+
+/* Same reasoning for the rest of the chrome - nav rail, breadcrumb,
+   footer. Only the content column is meant to move, and crossfading two
+   snapshots taken at different scroll offsets never looks like anything
+   but a ghost. Swap it outright. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
 }
 
 /* ---------- guide article plumbing ---------- */
@@ -297,6 +623,13 @@ html[data-entry-skip] .entry-reveal {
   width: 100%;
   height: 100%;
   background: black;
+}
+
+/* The article's code well needs an edge in dark mode: it sits only four
+   points below the surface, where a hard color change alone reads as a
+   rendering artifact rather than a container. */
+.dark .jolts-guide pre {
+  border: 1px solid var(--jt-line-soft);
 }
 
 /* Stacked character SVGs reconstruct the logo. Each character pops up

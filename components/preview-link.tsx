@@ -20,7 +20,10 @@ import { createPortal } from "react-dom"
    above the chip when the viewport below is tight. */
 
 export type PreviewTheme = {
+  /** bright: the "Read more" link */
   accent: string
+  /** the pane's frame chrome (deepened in dark) */
+  frame: string
   checkerA: string
   checkerB: string
   /** rgb triplet for the wash gradient, e.g. "222,141,255" */
@@ -171,7 +174,7 @@ export function PreviewLink({
             role="tooltip"
             className="fixed z-50 block overflow-hidden rounded-[12px] p-[5px] shadow-[0px_6px_22px_-4px_rgba(0,0,0,0.28)] animate-in fade-in zoom-in-95 duration-100 ease-out"
             style={{
-              background: theme.accent,
+              background: theme.frame,
               width: PANE_W,
               left: pos.left,
               top: pos.top,
@@ -207,7 +210,7 @@ export function PreviewLink({
             <Link
               href={href}
               tabIndex={-1}
-              className="relative block rounded-[8px] bg-white p-[13px] no-underline shadow-[0px_3px_5px_0px_rgba(0,0,0,0.2)]"
+              className="relative block rounded-[8px] bg-[var(--jt-surface)] p-[13px] no-underline shadow-[0px_3px_5px_0px_rgba(0,0,0,0.2)]"
               style={{
                 WebkitMaskImage: maskImage,
                 WebkitMaskPosition: maskPosition,
@@ -220,16 +223,16 @@ export function PreviewLink({
               }}
             >
               <span
-                className="block text-[15px] font-semibold tracking-[-0.02em] text-[#16181d]"
+                className="block text-[15px] font-semibold tracking-[-0.02em] text-[var(--jt-ink)]"
                 style={{ paddingRight: notchW - 4 }}
               >
                 {title}
               </span>
-              <span className="mt-[5px] block text-[13px] leading-[1.55] tracking-[-0.01em] text-[#5c6470]">
+              <span className="mt-[5px] block text-[13px] leading-[1.55] tracking-[-0.01em] text-[var(--jt-muted)]">
                 {excerpt}
               </span>
               {meta && (
-                <span className="mt-[7px] block text-[12px] tracking-[-0.01em] text-[#9aa1ab]">
+                <span className="mt-[7px] block text-[12px] tracking-[-0.01em] text-[var(--jt-faint)]">
                   {meta}
                 </span>
               )}

@@ -48,6 +48,12 @@ export function EntryReveal() {
 
     const w = window.innerWidth;
     const h = window.innerHeight;
+    // a zero-size viewport (a hidden/detached frame at mount) would make cols
+    // or rows 0, and createImageData(0, …) throws - just skip the animation
+    if (w <= 0 || h <= 0) {
+      setDone(true);
+      return;
+    }
     const dpr = window.devicePixelRatio || 1;
     canvas.width = w * dpr;
     canvas.height = h * dpr;

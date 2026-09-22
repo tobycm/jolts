@@ -6,9 +6,9 @@ import { Check, X } from "@phosphor-icons/react/dist/ssr"
 import { Breadcrumb } from "@/components/breadcrumb"
 
 export const metadata: Metadata = {
-  title: "Style guide - jolts",
-  description:
-    "The Jolts style guide!",
+  title: "Style Guide",
+  description: "The Jolts style guide!",
+  alternates: { canonical: "/style-guide" },
 }
 
 function Section({
@@ -22,12 +22,12 @@ function Section({
 }) {
   return (
     <section>
-      <h2 className="mt-[44px] text-[26px] font-semibold tracking-[-0.03em] text-black">
+      <h2 className="mt-[44px] text-[26px] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]">
         {title}
       </h2>
       {tldr && (
-        <p className="mt-[8px] text-[13.5px] tracking-[-0.01em] text-black/45">
-          <span className="font-semibold text-black/55">TL;DR:</span> {tldr}
+        <p className="mt-[8px] text-[13.5px] tracking-[-0.01em] text-[var(--jt-faint)]">
+          <span className="font-semibold text-[var(--jt-muted)]">TL;DR:</span> {tldr}
         </p>
       )}
       {children}
@@ -37,7 +37,7 @@ function Section({
 
 function P({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mt-[10px] text-[15.5px] leading-[1.7] tracking-[-0.01em] text-black/75">
+    <p className="mt-[10px] text-[15.5px] leading-[1.7] tracking-[-0.01em] text-[var(--jt-body)]">
       {children}
     </p>
   )
@@ -45,7 +45,7 @@ function P({ children }: { children: React.ReactNode }) {
 
 function Rules({ children }: { children: React.ReactNode }) {
   return (
-    <ul className="mt-[12px] list-disc space-y-[8px] pl-[22px] text-[15.5px] leading-[1.65] tracking-[-0.01em] text-black/75 marker:text-black/30">
+    <ul className="mt-[12px] list-disc space-y-[8px] pl-[22px] text-[15.5px] leading-[1.65] tracking-[-0.01em] text-[var(--jt-body)] marker:text-[var(--jt-fainter)]">
       {children}
     </ul>
   )
@@ -53,7 +53,7 @@ function Rules({ children }: { children: React.ReactNode }) {
 
 function Code({ children }: { children: React.ReactNode }) {
   return (
-    <code className="rounded-[5px] bg-[#f3f3f3] px-[5px] py-[1.5px] font-mono text-[0.88em]">
+    <code className="rounded-[5px] bg-[var(--jt-fill)] px-[5px] py-[1.5px] font-mono text-[0.88em]">
       {children}
     </code>
   )
@@ -64,12 +64,12 @@ function Examples({ good, bad }: { good: string; bad: string }) {
   return (
     <div className="mt-[12px] flex flex-col gap-[6px] text-[14.5px] tracking-[-0.01em]">
       <div className="flex items-baseline gap-[9px]">
-        <Check size={14} weight="bold" className="translate-y-[1.5px] shrink-0 text-[#067A54]" aria-label="Do" />
-        <span className="text-black/75">{good}</span>
+        <Check size={14} weight="bold" className="translate-y-[1.5px] shrink-0 text-[var(--jt-good)]" aria-label="Do" />
+        <span className="text-[var(--jt-body)]">{good}</span>
       </div>
       <div className="flex items-baseline gap-[9px]">
-        <X size={14} weight="bold" className="translate-y-[1.5px] shrink-0 text-[#d43c3c]" aria-label="Don't" />
-        <span className="text-black/45 line-through decoration-black/25">{bad}</span>
+        <X size={14} weight="bold" className="translate-y-[1.5px] shrink-0 text-[var(--jt-bad)]" aria-label="Don't" />
+        <span className="text-[var(--jt-faint)] line-through decoration-[var(--jt-line-strong)]">{bad}</span>
       </div>
     </div>
   )
@@ -79,10 +79,10 @@ export default function StyleGuidePage() {
   return (
     <div className="mx-auto w-full max-w-[820px] px-[32px] pt-[40px] pb-[40px]">
       <Breadcrumb trail={[{ label: "Style guide", href: "/style-guide" }]} />
-      <h1 className="text-[38px] leading-[1.08] font-semibold tracking-[-0.03em] text-black">
+      <h1 className="text-[38px] leading-[1.08] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]">
         Style guide
       </h1>
-      <p className="mt-[10px] max-w-[640px] text-[17px] leading-[1.55] tracking-[-0.01em] text-black/55">
+      <p className="mt-[10px] max-w-[640px] text-[17px] leading-[1.55] tracking-[-0.01em] text-[var(--jt-muted)]">
         Jolts will be written by many people, but should read like one unified
         encyclopedia. i.e. every page should feel like it came from the same
         person. This page is the standard of what Jolts page should be (and
@@ -261,7 +261,7 @@ export default function StyleGuidePage() {
                 href={href}
                 target="_blank"
                 rel="noreferrer"
-                className="font-medium text-black/70 underline decoration-black/25 underline-offset-2 hover:decoration-black"
+                className="font-medium text-[var(--jt-body)] underline decoration-[var(--jt-line-strong)] underline-offset-2 hover:decoration-[var(--jt-ink)]"
               >
                 {label}
               </a>
@@ -270,15 +270,15 @@ export default function StyleGuidePage() {
         </ul>
       </Section>
 
-      <p className="mt-[34px] text-[13.5px] tracking-[-0.01em] text-black/45">
+      <p className="mt-[34px] text-[13.5px] tracking-[-0.01em] text-[var(--jt-faint)]">
         This is in no way comprehensive, I wrote this at 3am, contributions to the style guide would be appreciated! - Anson
       </p>
 
-      <p className="mt-[34px] text-[13.5px] tracking-[-0.01em] text-black/45">
+      <p className="mt-[34px] text-[13.5px] tracking-[-0.01em] text-[var(--jt-faint)]">
         Are you ready?{" "}
         <Link
           href="/contribute"
-          className="font-semibold text-black/70 underline decoration-black/25 underline-offset-2 hover:decoration-black"
+          className="font-semibold text-[var(--jt-body)] underline decoration-[var(--jt-line-strong)] underline-offset-2 hover:decoration-[var(--jt-ink)]"
         >
           Write a guide
         </Link>

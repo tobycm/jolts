@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 
-import { CaretDown, Check, Clock, Coins, Wrench, X } from "@phosphor-icons/react"
+import { CaretDown, Check, Clock, Coins, Cube, Notebook, Wrench, X } from "@phosphor-icons/react"
 
 import { useEditorCtx } from "@/components/editor/context"
 import { GhostInput, GhostTextarea, ImageSlot } from "@/components/editor/views/bits"
@@ -386,6 +386,23 @@ export function MetaHeader() {
                 className="w-[56px]"
               />
             </EditTag>
+            <button
+              type="button"
+              title="A project guide ends with a thing you made; a general guide teaches a practice"
+              onClick={() =>
+                ctx.setMeta((m) =>
+                  m.type === "guide" ? { ...m, build: !m.build } : m
+                )
+              }
+              className="inline-flex h-[29px] items-center gap-[7px] rounded-full border border-black/10 bg-white px-[12px] text-[13px] tracking-[-0.01em] text-[#33383f] transition-colors hover:border-black/25"
+            >
+              {meta.build ? (
+                <Cube size={14} weight="fill" className="text-[#FF902F]" aria-hidden />
+              ) : (
+                <Notebook size={14} weight="fill" className="text-[#9aa1ab]" aria-hidden />
+              )}
+              {meta.build ? "project guide" : "general guide"}
+            </button>
             <button
               type="button"
               title="Does this build need a soldering iron?"

@@ -1,0 +1,76 @@
+---
+title: What software do I need?
+seoTitle: What software you need to design a hardware project, like PCB?
+seoDescription: The free software behind a hardware project - schematic and PCB design, 3D modelling for a case, and writing firmware!
+---
+
+Everything on this page is **free**! Not free-trial free :p actually free!
+ 
+You don't need to remember or know all the applications! Answer three simple questions and we'll recommend what suits you most!
+
+<ToolkitPicker
+  questions={[
+    {
+      id: "device",
+      prompt: "What are you on?",
+      options: ["Laptop / desktop", "School Chromebook", "Just a phone"]
+    },
+    {
+      id: "lang",
+      prompt: "Coded before?",
+      options: ["Python", "Some other language", "Nope"]
+    },
+    {
+      id: "pref",
+      prompt: "Would you perfer using browser based apps?",
+      options: ["Yep", "Nope", "Doesn't matter"]
+    }
+  ]}
+/>
+
+## Designing circuit boards (PCB)
+
+There are 
+
+<AppGroup>
+
+<App name="kicad" title="KiCad">
+Blah blah
+</App>
+
+<App name="easyeda" title="EasyEDA">
+blah blah
+</App>
+
+</AppGroup>
+
+<Warning title="There are two things called &#x22;CAD&#x22;">
+  CAD (*Computer-Aided Design*) actually means two totally different tools!
+
+  - **Board CAD:** where you draw circuits and design PCBs. (The Cad in KiCad!)
+  - **3D CAD**: where you design objects, like the case your board lives in.
+
+  However, most of the time, people are referring to 3D CAD when they say CAD!
+</Warning>
+
+## Designing 3d parts (casing or other structure!)
+
+<AppGroup>
+
+<App name="onshape" title="OnShape" />
+
+<App name="fusion" title="Fusion 360" />
+
+</AppGroup>
+
+## Writing the code (firmware)
+
+Hardware code, also known as firmware, is normal code, and usually _tiny_ code, 20 to 50 lines makes lights blink and buttons do things already! If you've coded before, you probrobly don't have to worry about this part, if you haven't, it's still fine! It's really easy.
+
+<AppGroup>
+
+<App name="circuitpython" title="CircuitPython" />
+
+<App name="arduino" title="Arduino" />
+
+</AppGroup>

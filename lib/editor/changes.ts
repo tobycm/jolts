@@ -90,6 +90,14 @@ export function pageFrontmatter(title: string): string {
   return `---\ntitle: ${fmScalar(title)}\n---\n`
 }
 
+/** A chapter's frontmatter with its title updated - every other key the
+    author wrote (seoTitle, seoDescription) is left where it is. The editor
+    only edits the title, so it may only rewrite the title. */
+export function spliceTitle(front: string, title: string): string {
+  if (!/^title:.*$/m.test(front)) return pageFrontmatter(title)
+  return front.replace(/^title:.*$/m, `title: ${fmScalar(title)}`)
+}
+
 /** replace or insert the `updated:` line without touching anything else */
 export function spliceUpdated(front: string, date: string): string {
   if (/^updated:.*$/m.test(front)) {
@@ -160,9 +168,12 @@ export function computeChanges(input: ChangesInput): FileChange[] {
         front = origFront
         frontChanged = false
       }
-    } else {
+    } else if (page.originalRaw === null) {
       front = pageFrontmatter(page.title)
-      frontChanged = page.originalRaw === null || front !== origFront
+      frontChanged = true
+    } else {
+      front = spliceTitle(origFront, page.title)
+      frontChanged = front !== origFront
     }
 
     const bodyChanged = page.newBody !== null

@@ -1,9 +1,11 @@
 import {
+  entryPath,
   extractSections,
   leadText,
+  listBookPages,
   listConcepts,
-  listGuidePages,
   listGuides,
+  listPages,
   listTools,
 } from "@/lib/content"
 
@@ -83,7 +85,7 @@ export function GET() {
         keywords,
       })
     )
-    for (const page of listGuidePages(guide.slug)) {
+    for (const page of listBookPages("guides", guide.slug)) {
       docs.push(
         ...docsFor({
           group: "Guides",
@@ -120,24 +122,40 @@ export function GET() {
       })
     )
   }
-  docs.push(
-    {
-      href: "/start",
-      title: "Start here",
-      crumb: "Pages",
-      group: "Pages",
-      kind: "page",
-      text: "Never touched hardware? How Jolts works and picking a first build.",
-    },
-    {
-      href: "/contribute",
-      title: "Write a guide",
-      crumb: "Pages",
-      group: "Pages",
-      kind: "page",
-      text: "The PR flow, the block registry, and licensing.",
+  // page entries are books too, and top-level: /start, /start/<chapter>
+  for (const page of listPages()) {
+    const base = entryPath("pages", page.slug)
+    docs.push(
+      ...docsFor({
+        group: "Pages",
+        base,
+        title: page.meta.title,
+        body: page.body,
+        crumb: "Pages",
+        keywords: [page.meta.subtitle, ...page.meta.tags].join(" "),
+      })
+    )
+    for (const chapter of listBookPages("pages", page.slug)) {
+      docs.push(
+        ...docsFor({
+          group: "Pages",
+          base: `${base}/${chapter.slug}`,
+          title: chapter.title,
+          body: chapter.body,
+          crumb: page.meta.title,
+        })
+      )
     }
-  )
+  }
+  // still hand-written: /contribute is a TSX page, not a content entry
+  docs.push({
+    href: "/contribute",
+    title: "Write a guide",
+    crumb: "Pages",
+    group: "Pages",
+    kind: "page",
+    text: "The PR flow, the block registry, and licensing.",
+  })
 
   return Response.json(docs)
 }

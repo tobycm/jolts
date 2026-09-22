@@ -2,9 +2,10 @@ import matter from "gray-matter"
 
 import {
   CONTENT_TYPES,
+  entryPath,
   getEntry,
+  listBookPages,
   listEntries,
-  listGuidePages,
   type ContentType,
 } from "@/lib/content"
 
@@ -31,18 +32,16 @@ export async function GET(
   const entry = getEntry(type as ContentType, slug)
   if (!entry) return new Response("Not found", { status: 404 })
 
-  // multi-page guides ship as one markdown document: overview + pages
+  // books ship as one markdown document: overview + chapters
   let body = entry.body
-  if (entry.contentType === "guides") {
-    for (const page of listGuidePages(entry.slug)) {
-      body += `\n\n---\n\n# ${page.title}\n\n${page.body.trim()}\n`
-    }
+  for (const page of listBookPages(entry.contentType, entry.slug)) {
+    body += `\n\n---\n\n# ${page.title}\n\n${page.body.trim()}\n`
   }
 
   // re-serialize frontmatter so aliases/drafts round-trip exactly
   const raw = matter.stringify(body, {
     ...entry.meta,
-    canonical: `https://jolts.hackclub.com/${entry.contentType}/${entry.slug}`,
+    canonical: `https://jolts.hackclub.com${entryPath(entry.contentType, entry.slug)}`,
     license:
       "text/images CC BY-SA 4.0, code MIT - https://jolts.hackclub.com/contribute",
   })

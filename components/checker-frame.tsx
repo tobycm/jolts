@@ -11,7 +11,10 @@ import { cn } from "@/lib/utils"
    (13.5px semibold ≈ 7.8px/char) with padding that absorbs the error. */
 
 export type FrameTheme = {
-  accent: string
+  /** The frame's base fill, under the checker. Deliberately NOT the
+      family's `accent`: in dark mode the chrome drops to near-surface
+      luminance while the accent stays bright for type and icons. */
+  frame: string
   checkerA: string
   checkerB: string
   /** rgb triplet for the wash gradient */
@@ -38,7 +41,7 @@ export function CheckerFrame({
     // escape and paint over floating UI like the editor's menus
     <div
       className={cn("relative isolate overflow-hidden rounded-[12px] p-[5px]", className)}
-      style={{ background: theme.accent }}
+      style={{ background: theme.frame }}
     >
       <div
         aria-hidden
@@ -164,7 +167,7 @@ export function FlagFrame({
         {label}
       </span>
       <div
-        className="relative rounded-[7px] bg-white px-[15px] pt-[38px] pb-[13px]"
+        className="relative rounded-[7px] bg-[var(--jt-surface)] px-[15px] pt-[38px] pb-[13px]"
         style={leftFlagMaskStyle(notchW)}
       >
         {children}

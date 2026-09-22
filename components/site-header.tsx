@@ -52,7 +52,7 @@ const segmentClass = cn(
   "before:pointer-events-none before:absolute before:inset-0",
   "before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,0.55)_92%,rgba(255,255,255,0.85)_100%)]",
   // underline
-  "after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white after:opacity-0 after:transition-opacity after:duration-150 after:ease-out",
+  "after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--jt-surface)] after:opacity-0 after:transition-opacity after:duration-150 after:ease-out",
   "hover:after:opacity-100 data-popup-open:after:opacity-100"
 )
 
@@ -74,18 +74,18 @@ const segmentContentClass =
    during a panel-to-panel morph, so chrome attached to it stretches smoothly
    instead of clipping or flashing white. Panels below are pure content. */
 const popupChromeClass = cn(
-  "overflow-hidden rounded-[14px] bg-[#01A6FF] p-[6px] text-foreground ring-0",
+  "overflow-hidden rounded-[14px] bg-[var(--jt-chrome-accent)] p-[6px] text-foreground ring-0",
   "shadow-[0px_3px_13px_0px_rgba(0,0,0,0.25)]",
   // rotated blue checkerboard, same family as the header's
   "before:absolute before:-inset-[60%] before:rotate-[-16.06deg]",
-  "before:[background-image:conic-gradient(#01BBFF_0_25%,#01A6FF_0_50%,#01BBFF_0_75%,#01A6FF_0)]",
+  "before:[background-image:conic-gradient(var(--jt-chrome-checker-a)_0_25%,var(--jt-chrome-checker-b)_0_50%,var(--jt-chrome-checker-a)_0_75%,var(--jt-chrome-checker-b)_0)]",
   "before:[background-size:180px_180px]",
   // cyan gradient that deepens toward the bottom
-  "after:absolute after:inset-0 after:bg-gradient-to-b after:from-[rgba(1,206,242,0)] after:to-[rgba(1,206,242,0.7)]"
+  "after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:to-[var(--jt-chrome-wash-to)]"
 )
 
 const viewportChromeClass =
-  "z-10 rounded-[8px] bg-white shadow-[0px_3px_5px_0px_rgba(0,0,0,0.25)]"
+  "z-10 rounded-[8px] bg-[var(--jt-surface)] shadow-[0px_3px_5px_0px_rgba(0,0,0,0.25)]"
 
 /* One hoverable link row - shared by every panel's item list. */
 function PanelItem({
@@ -105,14 +105,14 @@ function PanelItem({
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noreferrer" : undefined}
-      className="flex-col items-start gap-[2px] rounded-[8px] px-[12px] py-[9px] hover:bg-[#f3f3f3] focus:bg-[#f3f3f3] active:bg-[#f3f3f3]"
+      className="flex-col items-start gap-[2px] rounded-[8px] px-[12px] py-[9px] hover:bg-[var(--jt-fill)] focus:bg-[var(--jt-fill)] active:bg-[var(--jt-fill)]"
     >
-      <span className="text-[16px] font-semibold tracking-[-0.03em] text-black">
+      <span className="text-[16px] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]">
         {title}
       </span>
       <span
         className={cn(
-          "text-[12px] leading-[normal] tracking-[-0.03em] text-black/50",
+          "text-[12px] leading-[normal] tracking-[-0.03em] text-[var(--jt-faint)]",
           descriptionClass
         )}
       >
@@ -133,7 +133,7 @@ function PanelFooter({
   return (
     <NavigationMenuLink
       href={href}
-      className="mt-auto flex h-[36px] w-full shrink-0 items-center justify-center gap-[6px] rounded-[7px] bg-[#f3f3f3] p-0 text-[13px] font-medium tracking-[-0.03em] text-[#5b5b5b] hover:bg-[#ececec] focus:bg-[#ececec] active:bg-[#ececec]"
+      className="mt-auto flex h-[36px] w-full shrink-0 items-center justify-center gap-[6px] rounded-[7px] bg-[var(--jt-fill)] p-0 text-[13px] font-medium tracking-[-0.03em] text-[var(--jt-muted)] hover:bg-[var(--jt-fill-hover)] focus:bg-[var(--jt-fill-hover)] active:bg-[var(--jt-fill-hover)]"
     >
       {children}
       <ArrowUpRight size={12} weight="bold" aria-hidden />
@@ -209,7 +209,7 @@ function GuidesPanel() {
             there is no re-render; the transform transition smooths it out. */}
         <NavigationMenuLink
           href="/start"
-          className="group/card relative block h-[302px] w-[244px] shrink-0 overflow-hidden rounded-[7px] border-[3px] border-solid border-[#ff902f] p-0 transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:bg-transparent hover:shadow-[0px_14px_28px_rgba(0,0,0,0.28)] focus:bg-transparent active:shadow-[0px_8px_18px_rgba(0,0,0,0.24)]"
+          className="group/card relative block h-[302px] w-[244px] shrink-0 overflow-hidden rounded-[7px] border-[3px] border-solid border-[var(--jt-guides-accent)] p-0 transition-[transform,box-shadow] duration-200 ease-out will-change-transform hover:bg-transparent hover:shadow-[0px_14px_28px_rgba(0,0,0,0.28)] focus:bg-transparent active:shadow-[0px_8px_18px_rgba(0,0,0,0.24)]"
           /* Pointer events, not mouse events, so a finger can be told apart:
              a touch would otherwise leave the card tilted and the cursor pill
              floating where it was tapped, with no unhover to clear either. */
@@ -236,15 +236,15 @@ function GuidesPanel() {
           }}
         >
           {/* background: checkerboard + sunlight gradient.
-              Values sampled from the Figma render: base squares #FFBA01/#FF9D00
-              (~54px at this scale), washed toward rgba(255,211,1,.75) at the
-              top-right so the checker contrast fades out there. */}
+              Squares and wash come from the guides family (globals.css);
+              the wash is pinned to the top-right so the checker contrast
+              fades out there. Sampled from the Figma render at ~54px. */}
           <div
             aria-hidden
             className="absolute -inset-[60%] rotate-[-8.66deg]"
             style={{
               backgroundImage:
-                "conic-gradient(#FFBA01 0 25%, #FF9D00 0 50%, #FFBA01 0 75%, #FF9D00 0)",
+                "conic-gradient(var(--jt-guides-checker-a) 0 25%, var(--jt-guides-checker-b) 0 50%, var(--jt-guides-checker-a) 0 75%, var(--jt-guides-checker-b) 0)",
               backgroundSize: "107px 107px",
             }}
           />
@@ -253,7 +253,7 @@ function GuidesPanel() {
             className="absolute inset-0"
             style={{
               backgroundImage:
-                "linear-gradient(67.21deg, rgba(255,211,1,0) 0%, rgba(255,211,1,0.75) 100%)",
+                "linear-gradient(67.21deg, rgba(var(--jt-guides-wash),0) 0%, rgba(var(--jt-guides-wash),0.75) 100%)",
             }}
           />
 
@@ -288,7 +288,7 @@ function GuidesPanel() {
               built at design scale (173x34) and scaled 0.8 from the top-right
               so it sits flush with the card's corner radius. */}
           <span
-            className="absolute -top-[3px] -right-[3px] flex h-[34px] w-[173px] origin-top-right scale-[0.8] items-center justify-end gap-[6px] bg-[#ff902f] pr-[20px] text-[16px] font-semibold tracking-[-0.03em] text-white"
+            className="absolute -top-[3px] -right-[3px] flex h-[34px] w-[173px] origin-top-right scale-[0.8] items-center justify-end gap-[6px] bg-[var(--jt-guides-accent)] pr-[20px] text-[16px] font-semibold tracking-[-0.03em] text-[var(--jt-on-accent)]"
             style={{
               clipPath:
                 "path('M22.3123 26.1852L11.8664 7.04281C9.49719 2.70115 4.94603 0 0 0H165C169.418 0 173 3.58172 173 8V34H35.4794C29.9913 34 24.9412 31.0028 22.3123 26.1852Z')",
@@ -303,7 +303,7 @@ function GuidesPanel() {
         <AnimatePresence>
           {cardHover && (
             <motion.span
-              className="pointer-events-none absolute top-0 left-0 z-30 flex h-[32px] items-center gap-[6px] rounded-[16px] rounded-bl-[5.4px] bg-black px-[15px] text-[14px] font-semibold tracking-[-0.03em] whitespace-nowrap text-white"
+              className="pointer-events-none absolute top-0 left-0 z-30 flex h-[32px] items-center gap-[6px] rounded-[16px] rounded-bl-[5.4px] bg-[var(--jt-ink)] px-[15px] text-[14px] font-semibold tracking-[-0.03em] whitespace-nowrap text-[var(--jt-page)]"
               style={{ x: cursorX, y: cursorY, transformOrigin: "left bottom" }}
               initial={{ opacity: 0, scale: 0.55 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -426,11 +426,11 @@ const sections: NavSection[] = [
 /* Same chrome as everything else in the header - the buttons that flank the
    nav (search, hamburger) share this square. */
 const chromeButtonClass = cn(
-  "jolts-glow relative flex cursor-pointer items-center justify-center overflow-hidden rounded-[4px] bg-white/20",
+  "jolts-glow relative flex cursor-pointer items-center justify-center overflow-hidden rounded-[4px] bg-[var(--jt-header-pill)]",
   "before:pointer-events-none before:absolute before:inset-0",
   "before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,0.55)_92%,rgba(255,255,255,0.85)_100%)]",
   "active:before:bg-[linear-gradient(to_bottom,rgba(255,255,255,0.15)_0%,rgba(255,255,255,0.75)_92%,rgba(255,255,255,1)_100%)]",
-  "after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white after:opacity-0 after:transition-opacity after:duration-150 after:ease-out",
+  "after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--jt-surface)] after:opacity-0 after:transition-opacity after:duration-150 after:ease-out",
   // press first; hover is the mouse-only extra, and below md there is no
   // mouse worth designing for - same split as .jolts-glow in globals.css
   "active:after:opacity-100 md:hover:after:opacity-100"
@@ -456,14 +456,14 @@ function MobileRow({
 }) {
   const external = href.startsWith("http")
   const className =
-    "flex flex-col items-start gap-[2px] rounded-[8px] px-[12px] py-[9px] active:bg-[#f3f3f3]"
+    "flex flex-col items-start gap-[2px] rounded-[8px] px-[12px] py-[9px] active:bg-[var(--jt-fill)]"
   const inner = (
     <>
-      <span className="text-[15.5px] font-semibold tracking-[-0.03em] text-black">
+      <span className="text-[15.5px] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]">
         {title}
       </span>
       {description && (
-        <span className="text-[12px] leading-[normal] tracking-[-0.03em] text-black/50">
+        <span className="text-[12px] leading-[normal] tracking-[-0.03em] text-[var(--jt-faint)]">
           {description}
         </span>
       )}
@@ -500,20 +500,20 @@ function MobileSection({
   onNavigate: () => void
 }) {
   return (
-    <div className="border-t border-black/[0.07] first:border-t-0">
+    <div className="border-t border-[var(--jt-line-soft)] first:border-t-0">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={expanded}
-        className="flex w-full cursor-pointer items-center gap-[10px] rounded-[8px] px-[12px] py-[12px] text-left active:bg-[#f3f3f3]"
+        className="flex w-full cursor-pointer items-center gap-[10px] rounded-[8px] px-[12px] py-[12px] text-left active:bg-[var(--jt-fill)]"
       >
         <section.icon
           size={21}
           weight="fill"
           aria-hidden
-          className="shrink-0 text-[#01A6FF]"
+          className="shrink-0 text-[var(--jt-chrome-accent)]"
         />
-        <span className="flex-1 text-[17px] font-semibold tracking-[-0.03em] text-black">
+        <span className="flex-1 text-[17px] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]">
           {section.label}
         </span>
         <CaretDown
@@ -521,7 +521,7 @@ function MobileSection({
           weight="bold"
           aria-hidden
           className={cn(
-            "shrink-0 text-black/35 transition-transform duration-200 ease-out",
+            "shrink-0 text-[var(--jt-fainter)] transition-transform duration-200 ease-out",
             expanded && "rotate-180"
           )}
         />
@@ -550,7 +550,7 @@ function MobileSection({
                 <Link
                   href={section.footerHref}
                   onClick={onNavigate}
-                  className="mt-[4px] mr-[12px] flex h-[36px] items-center justify-center gap-[6px] rounded-[7px] bg-[#f3f3f3] text-[13px] font-medium tracking-[-0.03em] text-[#5b5b5b] active:bg-[#ececec]"
+                  className="mt-[4px] mr-[12px] flex h-[36px] items-center justify-center gap-[6px] rounded-[7px] bg-[var(--jt-fill)] text-[13px] font-medium tracking-[-0.03em] text-[var(--jt-muted)] active:bg-[var(--jt-fill-hover)]"
                 >
                   {section.footer}
                   <ArrowUpRight size={12} weight="bold" aria-hidden />
@@ -569,7 +569,7 @@ function MobileSection({
    icons, which would have to cut from one shape to the other. */
 function MenuGlyph({ open }: { open: boolean }) {
   const bar =
-    "absolute left-0 h-[2.5px] w-full rounded-full bg-white transition-[translate,rotate,opacity] duration-200 ease-out"
+    "absolute left-0 h-[2.5px] w-full rounded-full bg-[var(--jt-surface)] transition-[translate,rotate,opacity] duration-200 ease-out"
   return (
     <span
       aria-hidden
@@ -642,7 +642,7 @@ function MobileNav({ sections }: { sections: NavSection[] }) {
             <motion.div
               aria-hidden
               onClick={close}
-              className="absolute top-full left-0 h-screen w-full bg-black/25 md:hidden"
+              className="absolute top-full left-0 h-screen w-full bg-[var(--jt-scrim)] md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -657,19 +657,19 @@ function MobileNav({ sections }: { sections: NavSection[] }) {
               transition={{ type: "spring", stiffness: 520, damping: 38 }}
             >
               <div className={cn("relative", popupChromeClass)}>
-                <div className="relative z-10 max-h-[calc(100dvh-110px)] overflow-y-auto overscroll-contain rounded-[8px] bg-white p-[6px] shadow-[0px_3px_5px_0px_rgba(0,0,0,0.25)]">
+                <div className="relative z-10 max-h-[calc(100dvh-110px)] overflow-y-auto overscroll-contain rounded-[8px] bg-[var(--jt-surface)] p-[6px] shadow-[0px_3px_5px_0px_rgba(0,0,0,0.25)]">
                   {/* the Start here! card, flattened into a banner */}
                   <Link
                     href="/start"
                     onClick={close}
-                    className="relative mb-[6px] flex h-[54px] items-center gap-[8px] overflow-hidden rounded-[7px] border-[3px] border-solid border-[#ff902f] px-[14px]"
+                    className="relative mb-[6px] flex h-[54px] items-center gap-[8px] overflow-hidden rounded-[7px] border-[3px] border-solid border-[var(--jt-guides-accent)] px-[14px]"
                   >
                     <span
                       aria-hidden
                       className="absolute -inset-[120%] rotate-[-8.66deg]"
                       style={{
                         backgroundImage:
-                          "conic-gradient(#FFBA01 0 25%, #FF9D00 0 50%, #FFBA01 0 75%, #FF9D00 0)",
+                          "conic-gradient(var(--jt-guides-checker-a) 0 25%, var(--jt-guides-checker-b) 0 50%, var(--jt-guides-checker-a) 0 75%, var(--jt-guides-checker-b) 0)",
                         backgroundSize: "64px 64px",
                       }}
                     />
@@ -678,7 +678,7 @@ function MobileNav({ sections }: { sections: NavSection[] }) {
                       className="absolute inset-0"
                       style={{
                         backgroundImage:
-                          "linear-gradient(67.21deg, rgba(255,211,1,0) 0%, rgba(255,211,1,0.75) 100%)",
+                          "linear-gradient(67.21deg, rgba(var(--jt-guides-wash),0) 0%, rgba(var(--jt-guides-wash),0.75) 100%)",
                       }}
                     />
                     <span className="relative z-10 flex flex-1 items-center gap-[7px] text-[17px] font-semibold tracking-[-0.03em] text-white [filter:drop-shadow(0px_1.5px_3px_rgba(0,0,0,0.3))]">
@@ -751,23 +751,34 @@ export function SiteHeader() {
     }
 
   return (
-    <header className="relative z-40 h-[68px] w-full md:h-[80px] lg:h-[91px]">
+    <header className="relative z-40 h-[68px] w-full [view-transition-name:jolts-header] md:h-[80px] lg:h-[91px]">
       {/* checkerboard background - pure CSS, no SVG involved */}
-      <div className="absolute inset-0 overflow-hidden shadow-[0px_3px_19px_0px_rgba(1,187,255,0.25)]">
+      <div className="absolute inset-0 overflow-hidden bg-[var(--jt-header)] shadow-[0px_3px_19px_0px_var(--jt-header-shadow)]">
+        {/* The plane spins about its own centre, so the further its ends
+            reach sideways the further they swing off the top and bottom of
+            the header - a fixed 250px overhang ran out near 2000px wide and
+            the corners fell through to bare page. The overhang has to grow
+            with the width instead: half the viewport times the sine of the
+            tilt, plus the header's own height (100% of the clipper). */}
         <div
           aria-hidden
-          className="absolute -inset-x-[10%] -inset-y-[250px] rotate-[-14.59deg] bg-[#01A6FF]"
-          style={{
-            backgroundImage:
-              "conic-gradient(#01BBFF 0 25%, #01A6FF 0 50%, #01BBFF 0 75%, #01A6FF 0)",
-            backgroundSize: "132px 132px",
-          }}
+          className="absolute -inset-x-[10%] bg-[var(--jt-header)]"
+          style={
+            {
+              "--tilt": "14.59deg",
+              rotate: "calc(-1 * var(--tilt))",
+              insetBlock: "calc(-1 * (50vw * sin(var(--tilt)) + 100%))",
+              backgroundImage:
+                "conic-gradient(var(--jt-header-checker-a) 0 25%, var(--jt-header-checker-b) 0 50%, var(--jt-header-checker-a) 0 75%, var(--jt-header-checker-b) 0)",
+              backgroundSize: "132px 132px",
+            } as React.CSSProperties
+          }
         />
         <div
           aria-hidden
-          className="absolute inset-0 bg-gradient-to-b from-[rgba(1,242,255,0.1)] to-[rgba(1,242,255,0.6)]"
+          className="absolute inset-0 bg-gradient-to-b from-[var(--jt-header-wash-from)] to-[var(--jt-header-wash-to)]"
         />
-        <div aria-hidden className="absolute inset-0 bg-black/5" />
+        <div aria-hidden className="absolute inset-0 bg-[var(--jt-header-veil)]" />
       </div>
 
       <div className="relative flex h-full items-start pr-[14px] pl-[18px] md:pr-[22px] md:pl-[26px] lg:pr-[35px] lg:pl-[54px]">
@@ -796,7 +807,7 @@ export function SiteHeader() {
             setMenuValue(v)
           }}
         >
-          <NavigationMenuList className="h-[46px] w-max flex-none justify-start gap-0 overflow-hidden rounded-[4px] bg-white/20 px-[7px] lg:h-[54px]">
+          <NavigationMenuList className="h-[46px] w-max flex-none justify-start gap-0 overflow-hidden rounded-[4px] bg-[var(--jt-header-pill)] px-[7px] lg:h-[54px]">
             <NavigationMenuItem className="h-full">
               <NavigationMenuTrigger
                 className={cn(segmentClass, bleedLeftClass)}

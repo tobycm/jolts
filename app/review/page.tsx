@@ -5,7 +5,7 @@ import { CuratorGate } from "@/components/review/gate"
 import { ReviewQueue } from "@/components/review/queue"
 
 export const metadata: Metadata = {
-  title: "Review queue - jolts",
+  title: "Review queue",
   robots: { index: false, follow: false },
 }
 

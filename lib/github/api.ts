@@ -1,3 +1,4 @@
+import { CONTENT_TYPES } from "@/lib/content-schema"
 import {
   FORK_FALLBACK_NAME,
   FORK_NAME,
@@ -389,7 +390,7 @@ export async function readPrEntry(
      the tree which folder the entry actually lives in */
   let contentType: string | null = null
   let listing: { name: string; type: string }[] = []
-  for (const candidate of ["guides", "concepts", "tools"]) {
+  for (const candidate of CONTENT_TYPES) {
     const dir = await gh<{ name: string; type: string }[]>(
       token,
       `${upstream}/contents/content/${candidate}/${slug}?ref=${pr.head.sha}`

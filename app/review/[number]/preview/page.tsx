@@ -8,7 +8,7 @@ import { readToken } from "@/lib/github/session"
 import { renderPreview } from "@/lib/review/preview"
 
 export const metadata: Metadata = {
-  title: "Preview - jolts",
+  title: "Preview",
   robots: { index: false, follow: false },
 }
 

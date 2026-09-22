@@ -11,12 +11,16 @@ import matter from "gray-matter"
 import { z } from "zod"
 
 const CONTENT_DIR = path.join(process.cwd(), "content")
-const TYPES = ["guides", "concepts", "tools"]
+const TYPES = ["guides", "concepts", "tools", "pages"]
+// types whose entries are books: index.mdx plus numbered chapters
+const BOOK_TYPES = ["guides", "pages"]
 
 const author = z.union([z.string(), z.array(z.string()).min(1)])
 const base = {
   title: z.string().min(1),
   subtitle: z.string().min(1),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
   author: author.optional(),
   contributors: z.array(z.string()).default([]),
   aliases: z.array(z.string()).default([]),
@@ -37,6 +41,7 @@ const schemas = {
   guides: z.object({
     ...base,
     type: z.literal("guide"),
+    build: z.boolean().default(true),
     difficulty: z.enum(["beginner", "intermediate", "advanced"]),
     time: z.string().min(1),
     cost: z.string().min(1),
@@ -46,6 +51,7 @@ const schemas = {
     tools: z.array(z.string()).default([]),
   }),
   concepts: z.object({ ...base, type: z.literal("concept") }),
+  pages: z.object({ ...base, type: z.literal("page") }),
   tools: z.object({
     ...base,
     type: z.literal("tool"),
@@ -58,7 +64,7 @@ const schemas = {
 const REGISTRY = new Set([
   "Step", "PartsList", "Tool", "Warning", "Checkpoint", "Schematic",
   "Video", "PinTable", "Difficulty", "ConceptLink", "ExternalGuide",
-  "ReadMore", "ShipIt",
+  "ReadMore", "ShipIt", "GuideGrid", "ToolkitPicker", "App", "AppGroup",
 ])
 
 let failures = 0
@@ -149,15 +155,15 @@ for (const type of TYPES) {
       }
     }
 
-    // guide pages: numbered siblings, one per stage
+    // book chapters: numbered siblings, one per stage
     const extraMdx = fs
       .readdirSync(path.join(CONTENT_DIR, type, slug))
       .filter((f) => f.endsWith(".mdx") && f !== "index.mdx")
     for (const pageFile of extraMdx) {
       const pageRel = `content/${type}/${slug}/${pageFile}`
       const m = pageFile.match(/^(\d+)-([a-z0-9]+(?:-[a-z0-9]+)*)\.mdx$/)
-      if (type !== "guides") {
-        fail(pageRel, "only guides may have extra pages - concepts and tools are single index.mdx files")
+      if (!BOOK_TYPES.includes(type)) {
+        fail(pageRel, "only guides and pages may have extra chapters - concepts and tools are single index.mdx files")
         continue
       }
       if (!m) {

@@ -11,7 +11,7 @@ export function SiteFooter() {
   return (
     <footer className="mt-[80px] pb-[56px]">
       <div className="mx-auto flex w-full max-w-[1100px] flex-col items-center gap-[8px] px-[28px] text-center opacity-60">
-        <nav className="flex flex-wrap items-center justify-center gap-x-[10px] gap-y-[4px] text-[13px] font-medium tracking-[-0.01em] text-[#5c6470]">
+        <nav className="flex flex-wrap items-center justify-center gap-x-[10px] gap-y-[4px] text-[13px] font-medium tracking-[-0.01em] text-[var(--jt-muted)]">
           {links.map(({ label, href }, i) => (
             <span key={label} className="flex items-center gap-[10px]">
               {i > 0 && <span aria-hidden>·</span>}

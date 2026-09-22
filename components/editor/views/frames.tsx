@@ -19,17 +19,17 @@ import { typeTheme } from "@/lib/theme"
    surface cutout tracks the label estimate the same way the server does. */
 
 const warningFrame: FrameTheme = {
-  accent: "#FF902F",
-  checkerA: "#FFBA01",
-  checkerB: "#FF9D00",
-  wash: "255,211,1",
+  frame: "var(--jt-guides-frame)",
+  checkerA: "var(--jt-guides-checker-a)",
+  checkerB: "var(--jt-guides-checker-b)",
+  wash: "var(--jt-guides-wash)",
 }
 
 const checkpointFrame: FrameTheme = {
-  accent: "#14B87A",
-  checkerA: "#2FCB8F",
-  checkerB: "#14B87A",
-  wash: "150,255,210",
+  frame: "var(--jt-check-frame)",
+  checkerA: "var(--jt-check-checker-a)",
+  checkerB: "var(--jt-check-checker-b)",
+  wash: "var(--jt-check-wash)",
 }
 
 function EditableFlagFrame({

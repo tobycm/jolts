@@ -15,10 +15,14 @@ import {
   FlagFrame,
   type FrameTheme,
 } from "@/components/checker-frame"
+import { GuideCard } from "@/components/entry-card"
 import { PreviewLink, type PreviewTheme } from "@/components/preview-link"
+import { ToolkitPicker } from "@/components/mdx/toolkit-picker"
+import { App, AppGroup } from "@/components/mdx/app-logo"
 import {
   contentImageUrl,
   getEntry,
+  listGuides,
   plainExcerpt,
   slugifyHeading,
   type Entry,
@@ -37,8 +41,8 @@ import { cn } from "@/lib/utils"
    loud moment at the end (ShipIt). Cross-links carry Wikipedia-style
    hover previews baked in at build time.
 
-   Everything except PreviewLink is a server component: guides ship almost
-   zero client JS. Blocks are bound per-entry (getMDXComponents) so they can
+   Everything except PreviewLink and ToolkitPicker is a server component:
+   guides ship almost zero client JS. Blocks are bound per-entry (getMDXComponents) so they can
    read frontmatter, resolve relative images, and inherit the content type's
    accent via --guide-accent on the article wrapper. */
 
@@ -52,11 +56,29 @@ function EditPen({ editUrl, className }: { editUrl?: string; className?: string 
       href={editUrl}
       aria-label="Edit this page in the visual editor"
       className={cn(
-        "text-[#c2c7ce] opacity-0 transition-opacity duration-150 group-hover/heading:opacity-100 hover:!text-[#16181d]",
+        "text-[var(--jt-fainter)] opacity-0 transition-opacity duration-150 group-hover/heading:opacity-100 hover:!text-[var(--jt-ink)]",
         className
       )}
     >
       <PencilSimple size={16} weight="bold" aria-hidden />
+    </a>
+  )
+}
+
+/* the # that hangs in the left margin of a heading on hover - a link to the
+   heading's own anchor, in the content type's accent (orange/purple/green
+   via --guide-accent). The heading it sits in must be `relative group/heading`.
+   Absolute so it never shifts the heading text; hidden until hover, and on
+   touch (no hover) it simply never shows. */
+function AnchorLink({ id }: { id: string }) {
+  return (
+    <a
+      href={`#${id}`}
+      aria-label="Link to this section"
+      className="absolute top-0 right-full mr-[8px] font-normal opacity-0 transition-opacity duration-150 select-none group-hover/heading:opacity-100 hover:!opacity-100"
+      style={{ color: "var(--guide-accent, var(--jt-guides-accent))" }}
+    >
+      #
     </a>
   )
 }
@@ -83,7 +105,8 @@ export function Step({
           accent with the tilted flag edge, continuing into a grey segment
           that carries the title */}
       {/* isolate: keeps the flag's z-10 from painting over floating UI */}
-      <h3 className="group/heading isolate flex items-stretch text-[17px] font-semibold tracking-[-0.03em]">
+      <h3 className="group/heading relative isolate flex items-stretch text-[17px] font-semibold tracking-[-0.03em]">
+        <AnchorLink id={slugifyHeading(title)} />
         {/* accent segment: the body's right edge is clipped diagonally so
             nothing can leak past the seam, and a skewed rounded cap rides
             the same diagonal (outside the clipped span - clip-path clips
@@ -91,12 +114,12 @@ export function Step({
         <span aria-hidden className="relative z-10 flex shrink-0">
           <span
             className="absolute top-0 right-[4px] h-full w-[18px] -skew-x-[16deg] rounded-r-[7px]"
-            style={{ background: "var(--guide-accent, #01A6FF)" }}
+            style={{ background: "var(--guide-accent, var(--jt-chrome-accent))" }}
           />
           <span
-            className="relative flex items-center gap-[4px] rounded-l-[8px] py-[5px] pr-[15px] pl-[13px] text-[13px] tracking-[-0.02em] text-white"
+            className="relative flex items-center gap-[4px] rounded-l-[8px] py-[5px] pr-[15px] pl-[13px] text-[13px] tracking-[-0.02em] text-[var(--jt-on-accent)]"
             style={{
-              background: "var(--guide-accent, #01A6FF)",
+              background: "var(--guide-accent, var(--jt-chrome-accent))",
               clipPath:
                 "polygon(0 0, calc(100% - 9px) 0, calc(100% - 18px) 100%, 0 100%)",
             }}
@@ -105,7 +128,7 @@ export function Step({
             <span className="jolts-step-num tabular-nums" />
           </span>
         </span>
-        <span className="-ml-[20px] min-w-0 rounded-r-[8px] bg-[#f3f3f3] py-[5px] pr-[16px] pl-[30px] text-[#16181d]">
+        <span className="-ml-[20px] min-w-0 rounded-r-[8px] bg-[var(--jt-fill)] py-[5px] pr-[16px] pl-[30px] text-[var(--jt-ink)]">
           {title}
         </span>
         <EditPen editUrl={editUrl} className="ml-auto self-center pl-[10px]" />
@@ -122,7 +145,7 @@ export function Step({
             src={image}
             alt={alt ?? title}
             loading="lazy"
-            className="!my-0 aspect-[4/3] w-full rounded-[8px] border border-black/10 object-cover"
+            className="!my-0 aspect-[4/3] w-full rounded-[8px] border border-[var(--jt-line)] object-cover"
           />
         )}
         <div className="jolts-step-body min-w-0 text-[15.5px] leading-[1.65] tracking-[-0.01em]">
@@ -141,13 +164,13 @@ function PartsListFor({ entry }: { entry: Entry }) {
   const theme = typeTheme[entry.contentType]
   return (
     <CheckerFrame theme={theme} className="my-[36px]" checkerSize={150}>
-      <div className="relative rounded-[7px] bg-white px-[15px] py-[13px]">
+      <div className="relative rounded-[7px] bg-[var(--jt-surface)] px-[15px] py-[13px]">
       <div className="flex items-baseline justify-between pb-[12px]">
-        <h3 className="!m-0 flex items-center gap-[9px] text-[17px] font-semibold tracking-[-0.03em] text-[#16181d]">
+        <h3 className="!m-0 flex items-center gap-[9px] text-[17px] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]">
           <Package size={19} weight="fill" style={{ color: theme.accent }} aria-hidden />
           What you need
         </h3>
-        <span className="text-[13.5px] tracking-[-0.01em] text-[#5c6470]">
+        <span className="text-[13.5px] tracking-[-0.01em] text-[var(--jt-muted)]">
           {meta.cost} total
         </span>
       </div>
@@ -161,41 +184,41 @@ function PartsListFor({ entry }: { entry: Entry }) {
                   src={contentImageUrl(entry.contentType, entry.slug, part.image)}
                   alt=""
                   loading="lazy"
-                  className="!my-0 size-[54px] shrink-0 rounded-[8px] border border-black/[0.08] bg-white object-cover"
+                  className="!my-0 size-[54px] shrink-0 rounded-[8px] border border-[var(--jt-line)] bg-[var(--jt-surface)] object-cover"
                 />
               ) : (
                 <span
                   aria-hidden
-                  className="flex size-[54px] shrink-0 items-center justify-center rounded-[8px] bg-black/[0.04]"
+                  className="flex size-[54px] shrink-0 items-center justify-center rounded-[8px] bg-[var(--jt-fill)]"
                 >
-                  <Package size={22} weight="duotone" className="text-black/25" />
+                  <Package size={22} weight="duotone" className="text-[var(--jt-fainter)]" />
                 </span>
               )}
               <span className="min-w-0 flex-1">
-                <span className="flex items-baseline gap-[6px] text-[14.5px] leading-[1.3] font-semibold tracking-[-0.02em] text-[#16181d]">
+                <span className="flex items-baseline gap-[6px] text-[14.5px] leading-[1.3] font-semibold tracking-[-0.02em] text-[var(--jt-ink)]">
                   <span className="truncate">{part.name}</span>
                   {part.link && (
                     <ArrowUpRight
                       size={11}
                       weight="bold"
-                      className="shrink-0 self-center text-[#9aa1ab] transition-colors group-hover/part:text-[#16181d]"
+                      className="shrink-0 self-center text-[var(--jt-faint)] transition-colors group-hover/part:text-[var(--jt-ink)]"
                       aria-hidden
                     />
                   )}
                 </span>
                 {part.note && (
-                  <span className="mt-[1px] block truncate text-[12.5px] tracking-[-0.01em] text-[#9aa1ab]">
+                  <span className="mt-[1px] block truncate text-[12.5px] tracking-[-0.01em] text-[var(--jt-faint)]">
                     {part.note}
                   </span>
                 )}
-                <span className="mt-[3px] block text-[12.5px] tracking-[-0.01em] text-[#5c6470] tabular-nums">
-                  {part.qty}×{part.cost && <span className="text-[#9aa1ab]"> · {part.cost}</span>}
+                <span className="mt-[3px] block text-[12.5px] tracking-[-0.01em] text-[var(--jt-muted)] tabular-nums">
+                  {part.qty}×{part.cost && <span className="text-[var(--jt-faint)]"> · {part.cost}</span>}
                 </span>
               </span>
             </>
           )
           const tileClass =
-            "group/part !m-0 flex items-center gap-[12px] rounded-[10px] border border-black/[0.08] p-[9px]"
+            "group/part !m-0 flex items-center gap-[12px] rounded-[10px] border border-[var(--jt-line)] p-[9px]"
           return (
             <li key={part.name} className="!m-0 contents">
               {part.link ? (
@@ -205,13 +228,13 @@ function PartsListFor({ entry }: { entry: Entry }) {
                   rel="noreferrer"
                   className={
                     tileClass +
-                    " bg-white no-underline transition-colors duration-150 hover:border-black/25"
+                    " bg-[var(--jt-surface)] no-underline transition-colors duration-150 hover:border-[var(--jt-line-hover)]"
                   }
                 >
                   {inner}
                 </a>
               ) : (
-                <span className={tileClass + " bg-white"}>{inner}</span>
+                <span className={tileClass + " bg-[var(--jt-surface)]"}>{inner}</span>
               )}
             </li>
           )
@@ -229,23 +252,55 @@ function PartsListFor({ entry }: { entry: Entry }) {
    destination type's family. */
 
 const conceptPreviewTheme: PreviewTheme = {
-  accent: "#A633D6",
-  checkerA: "#BB4FE8",
-  checkerB: "#A633D6",
-  wash: "222,141,255",
-  chipBg: "#F8EEFC",
-  chipText: "#8A21B8",
-  chipHoverBg: "#F0DFF8",
+  accent: "var(--jt-concepts-accent)",
+  frame: "var(--jt-concepts-frame)",
+  checkerA: "var(--jt-concepts-checker-a)",
+  checkerB: "var(--jt-concepts-checker-b)",
+  wash: "var(--jt-concepts-wash)",
+  chipBg: "var(--jt-concepts-chip)",
+  chipText: "var(--jt-concepts-chip-ink)",
+  chipHoverBg: "var(--jt-concepts-chip-hover)",
 }
 
 const toolPreviewTheme: PreviewTheme = {
-  accent: "#0EBF80",
-  checkerA: "#33D6A6",
-  checkerB: "#14C98F",
-  wash: "141,255,216",
-  chipBg: "#E9FAF3",
-  chipText: "#067A54",
-  chipHoverBg: "#DCF5EA",
+  accent: "var(--jt-tools-accent)",
+  frame: "var(--jt-tools-frame)",
+  checkerA: "var(--jt-tools-checker-a)",
+  checkerB: "var(--jt-tools-checker-b)",
+  wash: "var(--jt-tools-wash)",
+  chipBg: "var(--jt-tools-chip)",
+  chipText: "var(--jt-tools-chip-ink)",
+  chipHoverBg: "var(--jt-tools-chip-hover)",
+}
+
+/* The guide catalog, inline. Site pages ("Start here") need to hand the
+   reader the actual builds, not a link to them; sort="easiest" leads with
+   the ones that need no soldering, and only="builds" drops the general
+   guides that don't end in a finished object. */
+async function GuideGrid({
+  sort,
+  only,
+}: {
+  sort?: "easiest"
+  only?: "builds"
+}) {
+  const all =
+    only === "builds" ? listGuides().filter((g) => g.meta.build) : listGuides()
+  const guides =
+    sort === "easiest"
+      ? [...all].sort(
+          (a, b) =>
+            Number(a.meta.soldering) - Number(b.meta.soldering) ||
+            a.meta.title.localeCompare(b.meta.title)
+        )
+      : all
+  return (
+    <div className="my-[28px] grid grid-cols-1 gap-[18px] sm:grid-cols-2">
+      {guides.map((entry) => (
+        <GuideCard key={entry.slug} entry={entry} />
+      ))}
+    </div>
+  )
 }
 
 function ConceptLinkInline({
@@ -300,17 +355,17 @@ function ToolLinkInline({
 
 /* same family as ShipIt / the Start-here card */
 const warningFrame: FrameTheme = {
-  accent: "#FF902F",
-  checkerA: "#FFBA01",
-  checkerB: "#FF9D00",
-  wash: "255,211,1",
+  frame: "var(--jt-guides-frame)",
+  checkerA: "var(--jt-guides-checker-a)",
+  checkerB: "var(--jt-guides-checker-b)",
+  wash: "var(--jt-guides-wash)",
 }
 
 const checkpointFrame: FrameTheme = {
-  accent: "#14B87A",
-  checkerA: "#2FCB8F",
-  checkerB: "#14B87A",
-  wash: "150,255,210",
+  frame: "var(--jt-check-frame)",
+  checkerA: "var(--jt-check-checker-a)",
+  checkerB: "var(--jt-check-checker-b)",
+  wash: "var(--jt-check-wash)",
 }
 
 export function Warning({
@@ -327,7 +382,7 @@ export function Warning({
         label={title}
         icon={<WarningIcon size={15} weight="fill" aria-hidden />}
       >
-        <div className="jolts-tight text-[14.5px] leading-[1.6] tracking-[-0.01em] text-[#5c6470]">
+        <div className="jolts-tight text-[14.5px] leading-[1.6] tracking-[-0.01em] text-[var(--jt-muted)]">
           {children}
         </div>
       </FlagFrame>
@@ -349,7 +404,7 @@ export function Checkpoint({
         label={title}
         icon={<CheckCircle size={15} weight="fill" aria-hidden />}
       >
-        <div className="jolts-tight text-[14.5px] leading-[1.6] tracking-[-0.01em] text-[#5c6470]">
+        <div className="jolts-tight text-[14.5px] leading-[1.6] tracking-[-0.01em] text-[var(--jt-muted)]">
           {children}
         </div>
       </FlagFrame>
@@ -377,10 +432,10 @@ function SchematicFor({
         src={contentImageUrl(entry.contentType, entry.slug, src)}
         alt={alt}
         loading="lazy"
-        className="!my-0 w-full rounded-[8px] border border-black/10 bg-white"
+        className="!my-0 w-full rounded-[8px] border border-[var(--jt-line)] bg-[var(--jt-surface)]"
       />
       {caption && (
-        <figcaption className="mt-[8px] text-[13px] tracking-[-0.01em] text-[#9aa1ab]">
+        <figcaption className="mt-[8px] text-[13px] tracking-[-0.01em] text-[var(--jt-faint)]">
           {caption}
         </figcaption>
       )}
@@ -399,7 +454,7 @@ export function Video({ id, title }: { id: string; title: string }) {
         loading="lazy"
         allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
-        className="aspect-video w-full rounded-[8px] border border-black/10"
+        className="aspect-video w-full rounded-[8px] border border-[var(--jt-line)]"
       />
     </div>
   )
@@ -418,20 +473,20 @@ export function PinTable({
   return (
     <table className="my-[30px] w-full border-collapse text-[14px] tracking-[-0.01em]">
       <thead>
-        <tr className="border-b border-black/15 text-left text-[12.5px] font-semibold tracking-[0.01em] text-[#9aa1ab] uppercase">
+        <tr className="border-b border-[var(--jt-line)] text-left text-[12.5px] font-semibold tracking-[0.01em] text-[var(--jt-faint)] uppercase">
           <th className="py-[7px] pr-[16px] font-semibold">Pin</th>
           <th className="py-[7px] pr-[16px] font-semibold">Connects to</th>
           <th className="py-[7px] font-semibold">Why</th>
         </tr>
       </thead>
-      <tbody className="divide-y divide-black/[0.07]">
+      <tbody className="divide-y divide-[var(--jt-line-soft)]">
         {pins.map((p) => (
           <tr key={p.pin + p.signal}>
-            <td className="py-[8px] pr-[16px] font-mono text-[13px] font-medium text-[#16181d]">
+            <td className="py-[8px] pr-[16px] font-mono text-[13px] font-medium text-[var(--jt-ink)]">
               {p.pin}
             </td>
-            <td className="py-[8px] pr-[16px] text-[#16181d]">{p.signal}</td>
-            <td className="py-[8px] text-[#5c6470]">{p.note}</td>
+            <td className="py-[8px] pr-[16px] text-[var(--jt-ink)]">{p.signal}</td>
+            <td className="py-[8px] text-[var(--jt-muted)]">{p.note}</td>
           </tr>
         ))}
       </tbody>
@@ -448,7 +503,7 @@ export function Difficulty({
 }) {
   const filled = { beginner: 1, intermediate: 2, advanced: 3 }[level]
   return (
-    <span className="inline-flex items-center gap-[7px] text-[14px] tracking-[-0.01em] text-[#5c6470] capitalize">
+    <span className="inline-flex items-center gap-[7px] text-[14px] tracking-[-0.01em] text-[var(--jt-muted)] capitalize">
       <span className="flex gap-[3px]" aria-hidden>
         {[1, 2, 3].map((i) => (
           <span
@@ -456,7 +511,7 @@ export function Difficulty({
             className="size-[7px] rounded-full"
             style={{
               background:
-                i <= filled ? "var(--guide-accent, #FF902F)" : "rgba(0,0,0,0.12)",
+                i <= filled ? "var(--guide-accent, var(--jt-guides-accent))" : "var(--jt-dot-off)",
             }}
           />
         ))}
@@ -476,7 +531,7 @@ export function ReadMore({ children }: { children: React.ReactNode }) {
   return (
     <aside className="mt-[44px]">
       <div className="flex items-center gap-[14px]">
-        <h2 className="text-[17px] font-semibold tracking-[-0.03em] text-[#16181d]">
+        <h2 className="text-[17px] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]">
           Read more
         </h2>
         <span aria-hidden className="h-px flex-1 bg-black/10" />
@@ -512,19 +567,19 @@ export function ExternalGuide({
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="group my-[26px] block rounded-[10px] border border-black/[0.08] bg-[#fbfbfc] px-[15px] py-[11px] no-underline transition-colors duration-150 hover:border-black/20 hover:bg-white"
+      className="group my-[26px] block rounded-[10px] border border-[var(--jt-line)] bg-[var(--jt-raise)] px-[15px] py-[11px] no-underline transition-colors duration-150 hover:border-[var(--jt-line-hover)] hover:bg-[var(--jt-raise-hover)]"
     >
       <span className="flex items-baseline gap-[8px] text-[15px] tracking-[-0.01em]">
-        <span className="font-semibold text-[#16181d]">{title}</span>
-        <span className="text-[13px] text-[#9aa1ab]">· {domain}</span>
+        <span className="font-semibold text-[var(--jt-ink)]">{title}</span>
+        <span className="text-[13px] text-[var(--jt-faint)]">· {domain}</span>
         <ArrowUpRight
           size={14}
           weight="bold"
-          className="ml-auto shrink-0 self-center text-[#9aa1ab] transition-transform duration-150 group-hover:translate-x-[1px] group-hover:-translate-y-[1px] group-hover:text-[#16181d]"
+          className="ml-auto shrink-0 self-center text-[var(--jt-faint)] transition-transform duration-150 group-hover:translate-x-[1px] group-hover:-translate-y-[1px] group-hover:text-[var(--jt-ink)]"
           aria-hidden
         />
       </span>
-      <span className="jolts-tight mt-[2px] block text-[13.5px] leading-[1.55] tracking-[-0.01em] text-[#5c6470] [&_p]:!text-[13.5px] [&_p]:!leading-[1.55]">
+      <span className="jolts-tight mt-[2px] block text-[13.5px] leading-[1.55] tracking-[-0.01em] text-[var(--jt-muted)] [&_p]:!text-[13.5px] [&_p]:!leading-[1.55]">
         {children ?? `More on ${domain}.`}
       </span>
     </a>
@@ -556,18 +611,18 @@ function ShipItFor({ entry, children }: { entry: Entry; children?: React.ReactNo
           backgroundImage: `linear-gradient(180deg, rgba(${theme.wash},0) 0%, rgba(${theme.wash},0.55) 100%)`,
         }}
       />
-      <div className="relative rounded-[7px] bg-white px-[22px] py-[18px]">
-        <p className="!m-0 flex items-center gap-[9px] text-[20px] font-semibold tracking-[-0.03em] text-[#16181d]">
+      <div className="relative rounded-[7px] bg-[var(--jt-surface)] px-[22px] py-[18px]">
+        <p className="!m-0 flex items-center gap-[9px] text-[20px] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]">
           <RocketLaunch size={22} weight="fill" style={{ color: theme.accent }} aria-hidden />
           Ship it!
         </p>
-        <div className="jolts-tight mt-[4px] text-[14.5px] leading-[1.6] tracking-[-0.01em] text-[#5c6470]">
+        <div className="jolts-tight mt-[4px] text-[14.5px] leading-[1.6] tracking-[-0.01em] text-[var(--jt-muted)]">
           {children ?? (
             <p>
               Built it? Post a photo in{" "}
               <a
                 href="https://hackclub.slack.com/channels/ship"
-                className="font-semibold text-[#16181d] underline decoration-black/25 underline-offset-[3px] hover:decoration-black"
+                className="font-semibold text-[var(--jt-ink)] underline decoration-[var(--jt-line-strong)] underline-offset-[3px] hover:decoration-[var(--jt-ink)]"
               >
                 #ship on the Hack Club Slack
               </a>{" "} - and if you changed something, improve this guide with a pull
@@ -594,70 +649,88 @@ function textOf(node: React.ReactNode): string {
 
 function proseComponents(entry: Entry, editUrl?: string): MDXComponents {
   return {
-    h2: ({ children, ...props }) => (
-      <h2
-        id={slugifyHeading(textOf(children))}
-        className="group/heading mt-[48px] mb-[12px] flex items-baseline gap-[10px] scroll-mt-[24px] text-[26px] font-semibold tracking-[-0.03em] text-[#16181d]"
-        {...props}
-      >
-        <span className="min-w-0">{children}</span>
-        <EditPen editUrl={editUrl} className="ml-auto shrink-0 self-center" />
-      </h2>
-    ),
-    h3: (props) => (
-      <h3
-        className="mt-[34px] mb-[8px] text-[20px] font-semibold tracking-[-0.03em] text-[#16181d]"
-        {...props}
-      />
-    ),
+    h2: ({ children, ...props }) => {
+      const id = slugifyHeading(textOf(children))
+      return (
+        <h2
+          id={id}
+          className="group/heading relative mt-[48px] mb-[12px] flex items-baseline gap-[10px] scroll-mt-[24px] text-[26px] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]"
+          {...props}
+        >
+          <AnchorLink id={id} />
+          <span className="min-w-0">{children}</span>
+          <EditPen editUrl={editUrl} className="ml-auto shrink-0 self-center" />
+        </h2>
+      )
+    },
+    h3: ({ children, ...props }) => {
+      const id = slugifyHeading(textOf(children))
+      return (
+        <h3
+          id={id}
+          className="group/heading relative mt-[34px] mb-[8px] scroll-mt-[24px] text-[20px] font-semibold tracking-[-0.03em] text-[var(--jt-ink)]"
+          {...props}
+        >
+          <AnchorLink id={id} />
+          {children}
+        </h3>
+      )
+    },
     p: (props) => (
       <p
-        className="my-[14px] text-[15.5px] leading-[1.7] tracking-[-0.01em] text-[#33383f]"
+        className="my-[14px] text-[15.5px] leading-[1.7] tracking-[-0.01em] text-[var(--jt-body)]"
         {...props}
       />
     ),
-    a: (props) => (
+    /* Off-site links open in a new tab, matching ExternalGuide and the
+       parts tiles. Site-relative ones don't: a new tab for /tools/... is
+       just a second copy of the site. */
+    a: ({ href, ...props }) => (
       <a
-        className="font-medium text-[#16181d] underline decoration-black/25 decoration-[1.5px] underline-offset-[3px] transition-colors duration-150 hover:decoration-black"
+        href={href}
+        {...(href?.startsWith("http")
+          ? { target: "_blank", rel: "noreferrer" }
+          : null)}
+        className="font-medium text-[var(--jt-ink)] underline decoration-[var(--jt-line-strong)] decoration-[1.5px] underline-offset-[3px] transition-colors duration-150 hover:decoration-[var(--jt-ink)]"
         {...props}
       />
     ),
     ul: (props) => (
       <ul
-        className="my-[14px] list-disc space-y-[6px] pl-[20px] text-[15.5px] leading-[1.65] tracking-[-0.01em] text-[#33383f] marker:text-[var(--guide-accent)]"
+        className="my-[14px] list-disc space-y-[6px] pl-[20px] text-[15.5px] leading-[1.65] tracking-[-0.01em] text-[var(--jt-body)] marker:text-[var(--guide-accent)]"
         {...props}
       />
     ),
     ol: (props) => (
       <ol
-        className="my-[14px] list-decimal space-y-[6px] pl-[20px] text-[15.5px] leading-[1.65] tracking-[-0.01em] text-[#33383f] marker:font-semibold marker:text-[#9aa1ab]"
+        className="my-[14px] list-decimal space-y-[6px] pl-[20px] text-[15.5px] leading-[1.65] tracking-[-0.01em] text-[var(--jt-body)] marker:font-semibold marker:text-[var(--jt-faint)]"
         {...props}
       />
     ),
     code: (props) => (
       <code
-        className="rounded-[4px] bg-black/[0.055] px-[5px] py-[1.5px] font-mono text-[0.88em] text-[#16181d]"
+        className="rounded-[4px] bg-[var(--jt-code-inline)] px-[5px] py-[1.5px] font-mono text-[0.88em] text-[var(--jt-ink)]"
         {...props}
       />
     ),
     pre: (props) => (
       <pre
-        className="my-[20px] overflow-x-auto rounded-[10px] bg-[#15181d] p-[18px] text-[13.5px] leading-[1.6] text-[#e8eaed] [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-inherit"
+        className="my-[20px] overflow-x-auto rounded-[10px] bg-[var(--jt-well)] p-[18px] text-[13.5px] leading-[1.6] text-[var(--jt-well-ink)] [&_code]:bg-transparent [&_code]:p-0 [&_code]:text-inherit"
         {...props}
       />
     ),
     blockquote: (props) => (
       <blockquote
-        className="my-[20px] border-l pl-[16px] text-[#5c6470] italic"
+        className="my-[20px] border-l pl-[16px] text-[var(--jt-muted)] italic"
         style={{ borderColor: "var(--guide-accent)" }}
         {...props}
       />
     ),
-    hr: () => <hr className="my-[36px] border-black/10" />,
+    hr: () => <hr className="my-[36px] border-[var(--jt-line)]" />,
     table: (props) => (
       <div className="my-[20px] overflow-x-auto">
         <table
-          className="w-full border-collapse text-[14px] tracking-[-0.01em] [&_td]:border-t [&_td]:border-black/[0.07] [&_td]:py-[8px] [&_td]:pr-[16px] [&_th]:border-b [&_th]:border-black/15 [&_th]:py-[7px] [&_th]:pr-[16px] [&_th]:text-left [&_th]:text-[12.5px] [&_th]:font-semibold [&_th]:tracking-[0.01em] [&_th]:text-[#9aa1ab] [&_th]:uppercase"
+          className="w-full border-collapse text-[14px] tracking-[-0.01em] [&_td]:border-t [&_td]:border-[var(--jt-line-soft)] [&_td]:py-[8px] [&_td]:pr-[16px] [&_th]:border-b [&_th]:border-[var(--jt-line)] [&_th]:py-[7px] [&_th]:pr-[16px] [&_th]:text-left [&_th]:text-[12.5px] [&_th]:font-semibold [&_th]:tracking-[0.01em] [&_th]:text-[var(--jt-faint)] [&_th]:uppercase"
           {...props}
         />
       </div>
@@ -670,7 +743,7 @@ function proseComponents(entry: Entry, editUrl?: string): MDXComponents {
         src={contentImageUrl(entry.contentType, entry.slug, String(src ?? ""))}
         alt={alt ?? ""}
         loading="lazy"
-        className="my-[20px] block h-auto max-h-[480px] w-auto max-w-full rounded-[8px] border border-black/10"
+        className="my-[20px] block h-auto max-h-[480px] w-auto max-w-full rounded-[8px] border border-[var(--jt-line)]"
         {...rest}
       />
     ),
@@ -696,6 +769,8 @@ export function getMDXComponents(
       />
     ),
     PartsList: () => <PartsListFor entry={entry} />,
+    GuideGrid,
+    ToolkitPicker,
     Tool: ToolLinkInline,
     Warning,
     Checkpoint,
@@ -705,6 +780,8 @@ export function getMDXComponents(
     Video,
     PinTable,
     Difficulty,
+    App,
+    AppGroup,
     ConceptLink: ConceptLinkInline,
     ExternalGuide,
     ReadMore,

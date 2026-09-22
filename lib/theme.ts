@@ -1,51 +1,89 @@
 import type { ContentType } from "@/lib/content"
 
 /* Per-content-type visual identity, following the header's language:
-   a saturated accent, a two-tone conic checkerboard, and a light "wash"
-   gradient that fades the checker out toward a corner. Builds inherit the
+   a saturated accent, a two-tone conic checkerboard, and a "wash"
+   gradient that fades the checker out toward one edge. Builds inherit the
    orange/yellow family from the "Start here!" card; the blue family stays
-   reserved for site chrome (header, search). */
+   reserved for site chrome (header, search).
+
+   Every value is a CSS variable, defined once per theme in globals.css.
+   Nothing here resolves to a literal color, which is what lets the same
+   server-rendered markup carry both themes with no client branching:
+   `.dark` on <html> re-points the variables and the gradients below
+   recompute. See globals.css for the light/dark pairs and the reasoning
+   behind them. */
 export type TypeTheme = {
   /** Singular label, e.g. "Build" */
   label: string
   labelPlural: string
+  /** The bright one: type, icons, dots, small fills. */
   accent: string
-  /** Checkerboard square pair */
+  /** Checker chrome. Dark mode brings these down to near-surface
+      luminance while `accent` stays bright - see FrameTheme. */
+  frame: string
   checkerA: string
   checkerB: string
-  /** rgb triplet for the wash gradient, e.g. "255,211,1" */
+  /** rgb triplet for the wash gradient, consumed at several alphas */
   wash: string
-  /** Very light tint for chips/rows on white */
+  /** Soft glow behind hero art and card display windows. */
   tint: string
+  /** Bright checker pair for small decorative marks. The frame pair is
+      deepened in dark mode, which a 7px rule cannot survive. */
+  tickA: string
+  tickB: string
 }
 
 export const typeTheme: Record<ContentType, TypeTheme> = {
   guides: {
     label: "Guide",
     labelPlural: "Guides",
-    accent: "#FF902F",
-    checkerA: "#FFBA01",
-    checkerB: "#FF9D00",
-    wash: "255,211,1",
-    tint: "#FFF4E6",
+    accent: "var(--jt-guides-accent)",
+    frame: "var(--jt-guides-frame)",
+    checkerA: "var(--jt-guides-checker-a)",
+    checkerB: "var(--jt-guides-checker-b)",
+    wash: "var(--jt-guides-wash)",
+    tint: "var(--jt-guides-tint)",
+    tickA: "var(--jt-guides-tick-a)",
+    tickB: "var(--jt-guides-tick-b)",
   },
   concepts: {
     label: "Concept",
     labelPlural: "Concepts",
-    accent: "#A633D6",
-    checkerA: "#BB4FE8",
-    checkerB: "#A633D6",
-    wash: "222,141,255",
-    tint: "#F8EEFC",
+    accent: "var(--jt-concepts-accent)",
+    frame: "var(--jt-concepts-frame)",
+    checkerA: "var(--jt-concepts-checker-a)",
+    checkerB: "var(--jt-concepts-checker-b)",
+    wash: "var(--jt-concepts-wash)",
+    tint: "var(--jt-concepts-tint)",
+    tickA: "var(--jt-concepts-tick-a)",
+    tickB: "var(--jt-concepts-tick-b)",
   },
   tools: {
     label: "Tool",
     labelPlural: "Tools",
-    accent: "#0EBF80",
-    checkerA: "#33D6A6",
-    checkerB: "#14C98F",
-    wash: "141,255,216",
-    tint: "#E9FAF3",
+    accent: "var(--jt-tools-accent)",
+    frame: "var(--jt-tools-frame)",
+    checkerA: "var(--jt-tools-checker-a)",
+    checkerB: "var(--jt-tools-checker-b)",
+    wash: "var(--jt-tools-wash)",
+    tint: "var(--jt-tools-tint)",
+    tickA: "var(--jt-tools-tick-a)",
+    tickB: "var(--jt-tools-tick-b)",
+  },
+  /* Site pages borrow the guides family on purpose: "Start here" is the
+     door into the builds, and the header's Start here card is already
+     bordered in the same orange. */
+  pages: {
+    label: "Page",
+    labelPlural: "Pages",
+    accent: "var(--jt-guides-accent)",
+    frame: "var(--jt-guides-frame)",
+    checkerA: "var(--jt-guides-checker-a)",
+    checkerB: "var(--jt-guides-checker-b)",
+    wash: "var(--jt-guides-wash)",
+    tint: "var(--jt-guides-tint)",
+    tickA: "var(--jt-guides-tick-a)",
+    tickB: "var(--jt-guides-tick-b)",
   },
 }
 
@@ -54,10 +92,11 @@ export const typeTheme: Record<ContentType, TypeTheme> = {
    type, which is what makes those surfaces read as "the site talking" rather
    than "this guide". Shaped to drop straight into CheckerFrame. */
 export const chromeTheme = {
-  accent: "#01A6FF",
-  checkerA: "#01BBFF",
-  checkerB: "#01A6FF",
-  wash: "1,206,242",
+  accent: "var(--jt-chrome-accent)",
+  frame: "var(--jt-chrome-frame)",
+  checkerA: "var(--jt-chrome-checker-a)",
+  checkerB: "var(--jt-chrome-checker-b)",
+  wash: "var(--jt-chrome-wash)",
 }
 
 export const difficultyLabel = {

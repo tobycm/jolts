@@ -8,7 +8,7 @@ import Link from "next/link"
 
 export function Breadcrumb({
   trail,
-  accent = "#16181d",
+  accent = "var(--jt-ink)",
   editUrl,
 }: {
   /** in order, current page last */
@@ -25,7 +25,7 @@ export function Breadcrumb({
       <Link
         href="/"
         aria-label="Home"
-        className="flex items-center text-[#9aa1ab] transition-colors duration-150 hover:text-[#16181d]"
+        className="flex items-center text-[var(--jt-faint)] transition-colors duration-150 hover:text-[var(--jt-ink)]"
       >
         <House size={14} weight="fill" aria-hidden />
       </Link>
@@ -33,7 +33,7 @@ export function Breadcrumb({
         const last = i === trail.length - 1
         return (
           <span key={segment.href} className="flex items-center gap-[8px]">
-            <span aria-hidden className="text-black/20">
+            <span aria-hidden className="text-[var(--jt-fainter)]">
               /
             </span>
             <Link
@@ -42,7 +42,7 @@ export function Breadcrumb({
               className={
                 last
                   ? "font-semibold"
-                  : "text-[#9aa1ab] transition-colors duration-150 hover:text-[#16181d]"
+                  : "text-[var(--jt-faint)] transition-colors duration-150 hover:text-[var(--jt-ink)]"
               }
               style={last ? { color: accent } : undefined}
             >
@@ -54,7 +54,7 @@ export function Breadcrumb({
       {editUrl && (
         <Link
           href={editUrl}
-          className="ml-auto inline-flex items-center gap-[5px] text-[#9aa1ab] transition-colors duration-150 hover:text-[#16181d]"
+          className="ml-auto inline-flex items-center gap-[5px] text-[var(--jt-faint)] transition-colors duration-150 hover:text-[var(--jt-ink)]"
         >
           <PencilSimple size={13} weight="fill" aria-hidden />
           Edit
